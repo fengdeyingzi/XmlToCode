@@ -24,32 +24,88 @@ public class DomParser {
 		String age;
 	}
 
-	String text = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" + "<LinearLayout\n"
-			+ "\txmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
-			+ "\tandroid:layout_width=\"fill_parent\"\n" + "\tandroid:layout_height=\"match_parent\"\n"
-			+ "\tandroid:orientation=\"vertical\"\n" + "\tandroid:layout_weight=\"1.0\"\n"
-			+ "\tandroid:background=\"#20808080\"\n" + "\tandroid:id=\"@id/background\">\n" + "\n" + "\t<TextView\n"
-			+ "\t\tandroid:layout_width=\"wrap_content\"\n" + "\t\tandroid:layout_height=\"wrap_content\"\n"
-			+ "\t\tandroid:text=\"进制转换器\"\n" + "\t\tandroid:textColor=\"#989898\"\n" + "\t\tandroid:textSize=\"20sp\"\n"
-			+ "\t\tandroid:id=\"@+id/con_TextView\"/>\n" + "\n" + "\t<LinearLayout\n"
-			+ "\t\tandroid:layout_height=\"wrap_content\"\n" + "\t\tandroid:layout_width=\"match_parent\"\n"
-			+ "\t\tandroid:orientation=\"vertical\"\n" + "\t\tandroid:layout_weight=\"10\">\n" + "\n"
-			+ "\t\t<EditText\n" + "\t\t\tandroid:layout_height=\"wrap_content\"\n"
-			+ "\t\t\tandroid:scrollbars=\"vertical\"\n" + "\t\t\tandroid:ems=\"10\"\n"
-			+ "\t\t\tandroid:layout_width=\"match_parent\"\n" + "\t\t\tandroid:gravity=\"top|left\"\n"
-			+ "\t\t\tandroid:inputType=\"textCapCharacters|textMultiLine\"\n"
-			+ "\t\t\tandroid:id=\"@+id/con_editmain\"\n" + "\t\t\tandroid:typeface=\"monospace\"/>\n" + "\n"
-			+ "\t\t<LinearLayout\n" + "\t\t\tandroid:layout_width=\"match_parent\"\n"
-			+ "\t\t\tandroid:layout_height=\"wrap_content\"\n" + "\t\t\tandroid:orientation=\"vertical\">\n" + "\n"
-			+ "\t\t\t<Button\n" + "\t\t\t\tandroid:layout_height=\"wrap_content\"\n"
-			+ "\t\t\t\tandroid:text=\"转换十进制\"\n" + "\t\t\t\tandroid:layout_width=\"match_parent\"\n"
-			+ "\t\t\t\tandroid:id=\"@+id/con_ten\"\n" + "\t\t\t\tandroid:layout_weight=\"1\"/>\n" + "\n"
-			+ "\t\t\t<Button\n" + "\t\t\t\tandroid:layout_height=\"wrap_content\"\n"
-			+ "\t\t\t\tandroid:text=\"转换十六进制\"\n" + "\t\t\t\tandroid:layout_width=\"match_parent\"\n"
-			+ "\t\t\t\tandroid:id=\"@+id/con_hex\"/>\n" + "\n" + "\t\t\t<Button\n"
-			+ "\t\t\t\tandroid:layout_height=\"wrap_content\"\n" + "\t\t\t\tandroid:text=\"转换二进制\"\n"
-			+ "\t\t\t\tandroid:layout_width=\"match_parent\"\n" + "\t\t\t\tandroid:id=\"@+id/con_two\"/>\n" + "\n"
-			+ "\t\t</LinearLayout>\n" + "\n" + "\t</LinearLayout>\n" + "\n" + "</LinearLayout>\n" + "\n";
+	String text = 
+			"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+			+"<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+			+"    android:layout_width=\"match_parent\"\n"
+			+"    android:layout_height=\"match_parent\"\n"
+			+"    android:orientation=\"vertical\"\n"
+			+"    android:paddingLeft=\"16dp\"\n"
+			+"    android:paddingTop=\"24dp\"\n"
+			+"    android:paddingRight=\"16dp\">\n"
+			+"\n"
+			+"    <TextView\n"
+			+"        android:layout_width=\"wrap_content\"\n"
+			+"        android:layout_height=\"wrap_content\"\n"
+			+"        android:text=\"修改密码\"\n"
+			+"        android:textSize=\"@dimen/font_h1\" />\n"
+			+"\n"
+			+"    <View\n"
+			+"        android:layout_width=\"match_parent\"\n"
+			+"        android:layout_height=\"24dp\" />\n"
+			+"\n"
+			+"    <TextView\n"
+			+"        android:layout_width=\"wrap_content\"\n"
+			+"        android:layout_height=\"wrap_content\"\n"
+			+"        android:text=\"密码8至16位，建议包含数字、符号、字母中至少两种元素\"\n"
+			+"        android:textColor=\"@color/text_gray\" />\n"
+			+"\n"
+			+"    <View\n"
+			+"        android:layout_width=\"match_parent\"\n"
+			+"        android:layout_height=\"16dp\" />\n"
+			+"\n"
+			+"    <TextView\n"
+			+"        android:layout_width=\"wrap_content\"\n"
+			+"        android:layout_height=\"wrap_content\"\n"
+			+"\n"
+			+"        android:text=\"输入旧密码\"\n"
+			+"        android:textColor=\"@color/text_gray\" />\n"
+			+"\n"
+			+"    <EditText\n"
+			+"        android:id=\"@+id/edit_oldpassword\"\n"
+			+"        android:inputType=\"textPassword\"\n"
+			+"        android:singleLine=\"true\"\n"
+			+"        android:layout_width=\"match_parent\"\n"
+			+"        android:layout_height=\"wrap_content\" />\n"
+			+"\n"
+			+"    <View\n"
+			+"        android:layout_width=\"match_parent\"\n"
+			+"        android:layout_height=\"16dp\" />\n"
+			+"\n"
+			+"    <TextView\n"
+			+"        android:layout_width=\"wrap_content\"\n"
+			+"        android:layout_height=\"wrap_content\"\n"
+			+"        android:text=\"输入新密码\"\n"
+			+"        android:textColor=\"@color/text_gray\" />\n"
+			+"\n"
+			+"    <EditText\n"
+			+"        android:singleLine=\"true\"\n"
+			+"        android:inputType=\"textPassword\"\n"
+			+"        android:id=\"@+id/edit_newpassword\"\n"
+			+"        android:layout_width=\"match_parent\"\n"
+			+"        android:layout_height=\"wrap_content\" />\n"
+			+"\n"
+			+"    <TextView\n"
+			+"        android:id=\"@+id/text_forgetpassword\"\n"
+			+"        android:layout_width=\"wrap_content\"\n"
+			+"        android:layout_height=\"wrap_content\"\n"
+			+"        android:drawableRight=\"@drawable/right_arrow\"\n"
+			+"        android:text=\"忘记密码 \"\n"
+			+"        android:textColor=\"@color/text_gray\" />\n"
+			+"\n"
+			+"    <View\n"
+			+"        android:layout_width=\"match_parent\"\n"
+			+"        android:layout_height=\"24dp\" />\n"
+			+"\n"
+			+"    <Button\n"
+			+"        android:id=\"@+id/btn_submit\"\n"
+			+"        android:layout_width=\"match_parent\"\n"
+			+"        android:layout_height=\"wrap_content\"\n"
+			+"        android:text=\"确定\" />\n"
+			+"</LinearLayout>";
+
+
+
 
 	public void parse() {
 		DocumentBuilderFactory factory = null;
@@ -179,15 +235,25 @@ public class DomParser {
 					if (layout_width.equals("match_parent") || layout_width.equals("fill_parent")) {
 						layout_width = "ViewGroup.LayoutParams.MATCH_PARENT";
 					}
-					if (layout_width.equals("wrap_content")) {
+					else if (layout_width.equals("wrap_content")) {
 						layout_width = "ViewGroup.LayoutParams.WRAP_CONTENT";
 					}
+					else {
+						layout_width = XmlUtil.getSize(layout_width);
+					}
+					
 					if (layout_height.equals("match_parent") || layout_height.equals("fill_parent")) {
 						layout_height = "ViewGroup.LayoutParams.MATCH_PARENT";
 					}
-					if (layout_height.equals("wrap_content")) {
+					else if (layout_height.equals("wrap_content")) {
 						layout_height = "ViewGroup.LayoutParams.WRAP_CONTENT";
 					}
+					else {
+						layout_height = XmlUtil.getSize(layout_height);
+					}
+					
+					
+					
 					if (className.equals("LinearLayout")) {
 						System.out.println("    LinearLayout.LayoutParams " + element.getAttribute("layoutparams")
 								+ " = new LinearLayout.LayoutParams(" + layout_width + "," + layout_height + ");");
@@ -227,7 +293,7 @@ public class DomParser {
 					if (value.equals("vertical")) {
 						value = "LinearLayout.VERTICAL";
 					} else if (value.equals("horizontal")) {
-						value = "Linearlayout.HORIZONTAL";
+						value = "LinearLayout.HORIZONTAL";
 					}
 					System.out.println("    " + layout_name + ".setOrientation(" + value + ");");
 				} else if (key.equals("android:src")) {
@@ -252,7 +318,10 @@ public class DomParser {
 				}
 				else if (key.equals("android:layout_weight")) {
 
-				} else if (key.equals("android:inputType")) {
+				} 
+				//date|textUri|textShortMessage|textAutoCorrect|none|numberSigned|textVisiblePassword|textWebEditText|textMultiLine|textNoSuggestions|textCapSentences|
+				//textAutoComplete|textImeMultiLine|numberDecimal
+				else if (key.equals("android:inputType")) {
 					String items[] = value.split("\\|");
 					ArrayList<String> list_items = new ArrayList<String>();
 					for (String item : items)
@@ -260,23 +329,60 @@ public class DomParser {
 					// System.out.println("........................."+items+ "
 					// "+list_items);
 					value = "";
+					if(list_items.contains("date")){
+						value += "|InputType.TYPE_CLASS_DATETIME";
+					}
+					if(list_items.contains("textUri")){
+						value += "|InputType.TYPE_TEXT_VARIATION_URI";
+					}
+					if(list_items.contains("textShortMessage")){
+						value += "|InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE";
+					}
+					if(list_items.contains("textAutoCorrect")){
+						value += "|InputType.TYPE_TEXT_FLAG_AUTO_CORRECT";
+					}
+					if(list_items.contains("none")){
+						value += "|InputType.TYPE_DATETIME_VARIATION_NORMAL";
+					}
+					if(list_items.contains("numberSigned")){
+						value += "|InputType.TYPE_NUMBER_FLAG_SIGNED";
+					}
+					if(list_items.contains("textVisiblePassword")){
+						value += "|InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD";
+					}
+					if(list_items.contains("textWebEditText")){
+						value += "|InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT";
+					}
+					if(list_items.contains("textNoSuggestions")){
+						value += "|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS";
+					}
+					if(list_items.contains("textCapSentences")){
+						value += "|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES";
+					}
+					if(list_items.contains("textImeMultiLine")){
+						value += "|InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE";
+					}
+			
+					if(list_items.contains("numberDecimal")){
+						value += "|InputType.TYPE_NUMBER_FLAG_DECIMAL";
+					}
 					if (list_items.contains("text")) {
-						value += "InputType.TYPE_CLASS_TEXT";
+						value += "|InputType.TYPE_CLASS_TEXT";
 					}
 					if (list_items.contains("number")) {
-						if (value.length() > 0)
-							value += "|";
-						value += "InputType.TYPE_CLASS_NUMBER";
+						value += "|InputType.TYPE_CLASS_NUMBER";
 					}
 					if (list_items.contains("textCapCharacters")) {
-						if (value.length() > 0)
-							value += "|";
-						value += "InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS";
+						value += "|InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS";
 					}
 					if (list_items.contains("textMultiLine")) {
-						if (value.length() > 0)
-							value += "|";
-						value += "InputType.TYPE_TEXT_FLAG_MULTI_LINE";
+						value += "|InputType.TYPE_TEXT_FLAG_MULTI_LINE";
+					}
+					if(list_items.contains("textPassword")){
+						value += "|InputType.TYPE_TEXT_VARIATION_PASSWORD";
+					}
+					if(value.length()>0){
+						value = value.substring(1);
 					}
 					System.out.println("    " + layout_name + ".setInputType(" + value + ");");
 				} else if (key.equals("android:typeface")) {
@@ -483,12 +589,21 @@ public class DomParser {
 							
 					
 				}
+				else if(key.equals("android:singleLine")){
+					System.out.println("    "+layout_name+".setSingleLine("+value+");");
+				}
 				else if(key.equals("android:ems")){
 					System.out.println("    "+layout_name+".setEms("+XmlUtil.getSize(value)+");");
 				}
 				else if(key.equals("android:lines"))
 				{
 					System.out.println("    "+layout_name+".setLines("+value+");");
+				}
+				else if(key.equals("android:minLines")){
+					System.out.println("    "+layout_name+".setMinLines("+value+");");
+				}
+				else if(key.equals("android:maxLines")){
+					System.out.println("    "+layout_name+".setMaxLines("+value+");");
 				}
 				else if(key.equals("android:hint"))
 				{
