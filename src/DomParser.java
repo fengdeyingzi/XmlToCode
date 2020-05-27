@@ -1,8 +1,11 @@
+import java.awt.Paint;
+import java.awt.event.KeyEvent;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -21,72 +24,32 @@ public class DomParser {
 		String age;
 	}
 
-	String text = 
-			"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-			+"<LinearLayout\n"
-			+"\txmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
-			+"\tandroid:layout_width=\"fill_parent\"\n"
-			+"\tandroid:layout_height=\"match_parent\"\n"
-			+"\tandroid:orientation=\"vertical\"\n"
-			+"\tandroid:layout_weight=\"1.0\"\n"
-			+"\tandroid:background=\"#20808080\"\n"
-			+"\tandroid:id=\"@id/background\">\n"
-			+"\n"
-			+"\t<TextView\n"
-			+"\t\tandroid:layout_width=\"wrap_content\"\n"
-			+"\t\tandroid:layout_height=\"wrap_content\"\n"
-			+"\t\tandroid:text=\"进制转换器\"\n"
-			+"\t\tandroid:textColor=\"#989898\"\n"
-			+"\t\tandroid:textSize=\"20sp\"\n"
-			+"\t\tandroid:id=\"@+id/con_TextView\"/>\n"
-			+"\n"
-			+"\t<LinearLayout\n"
-			+"\t\tandroid:layout_height=\"wrap_content\"\n"
-			+"\t\tandroid:layout_width=\"match_parent\"\n"
-			+"\t\tandroid:orientation=\"vertical\"\n"
-			+"\t\tandroid:layout_weight=\"10\">\n"
-			+"\n"
-			+"\t\t<EditText\n"
-			+"\t\t\tandroid:layout_height=\"wrap_content\"\n"
-			+"\t\t\tandroid:scrollbars=\"vertical\"\n"
-			+"\t\t\tandroid:ems=\"10\"\n"
-			+"\t\t\tandroid:layout_width=\"match_parent\"\n"
-			+"\t\t\tandroid:gravity=\"top|left\"\n"
-			+"\t\t\tandroid:inputType=\"textCapCharacters|textMultiLine\"\n"
-			+"\t\t\tandroid:id=\"@+id/con_editmain\"\n"
-			+"\t\t\tandroid:typeface=\"monospace\"/>\n"
-			+"\n"
-			+"\t\t<LinearLayout\n"
-			+"\t\t\tandroid:layout_width=\"match_parent\"\n"
-			+"\t\t\tandroid:layout_height=\"wrap_content\"\n"
-			+"\t\t\tandroid:orientation=\"vertical\">\n"
-			+"\n"
-			+"\t\t\t<Button\n"
-			+"\t\t\t\tandroid:layout_height=\"wrap_content\"\n"
-			+"\t\t\t\tandroid:text=\"转换十进制\"\n"
-			+"\t\t\t\tandroid:layout_width=\"match_parent\"\n"
-			+"\t\t\t\tandroid:id=\"@+id/con_ten\"\n"
-			+"\t\t\t\tandroid:layout_weight=\"1\"/>\n"
-			+"\n"
-			+"\t\t\t<Button\n"
-			+"\t\t\t\tandroid:layout_height=\"wrap_content\"\n"
-			+"\t\t\t\tandroid:text=\"转换十六进制\"\n"
-			+"\t\t\t\tandroid:layout_width=\"match_parent\"\n"
-			+"\t\t\t\tandroid:id=\"@+id/con_hex\"/>\n"
-			+"\n"
-			+"\t\t\t<Button\n"
-			+"\t\t\t\tandroid:layout_height=\"wrap_content\"\n"
-			+"\t\t\t\tandroid:text=\"转换二进制\"\n"
-			+"\t\t\t\tandroid:layout_width=\"match_parent\"\n"
-			+"\t\t\t\tandroid:id=\"@+id/con_two\"/>\n"
-			+"\n"
-			+"\t\t</LinearLayout>\n"
-			+"\n"
-			+"\t</LinearLayout>\n"
-			+"\n"
-			+"</LinearLayout>\n"
-			+"\n";
-
+	String text = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" + "<LinearLayout\n"
+			+ "\txmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+			+ "\tandroid:layout_width=\"fill_parent\"\n" + "\tandroid:layout_height=\"match_parent\"\n"
+			+ "\tandroid:orientation=\"vertical\"\n" + "\tandroid:layout_weight=\"1.0\"\n"
+			+ "\tandroid:background=\"#20808080\"\n" + "\tandroid:id=\"@id/background\">\n" + "\n" + "\t<TextView\n"
+			+ "\t\tandroid:layout_width=\"wrap_content\"\n" + "\t\tandroid:layout_height=\"wrap_content\"\n"
+			+ "\t\tandroid:text=\"进制转换器\"\n" + "\t\tandroid:textColor=\"#989898\"\n" + "\t\tandroid:textSize=\"20sp\"\n"
+			+ "\t\tandroid:id=\"@+id/con_TextView\"/>\n" + "\n" + "\t<LinearLayout\n"
+			+ "\t\tandroid:layout_height=\"wrap_content\"\n" + "\t\tandroid:layout_width=\"match_parent\"\n"
+			+ "\t\tandroid:orientation=\"vertical\"\n" + "\t\tandroid:layout_weight=\"10\">\n" + "\n"
+			+ "\t\t<EditText\n" + "\t\t\tandroid:layout_height=\"wrap_content\"\n"
+			+ "\t\t\tandroid:scrollbars=\"vertical\"\n" + "\t\t\tandroid:ems=\"10\"\n"
+			+ "\t\t\tandroid:layout_width=\"match_parent\"\n" + "\t\t\tandroid:gravity=\"top|left\"\n"
+			+ "\t\t\tandroid:inputType=\"textCapCharacters|textMultiLine\"\n"
+			+ "\t\t\tandroid:id=\"@+id/con_editmain\"\n" + "\t\t\tandroid:typeface=\"monospace\"/>\n" + "\n"
+			+ "\t\t<LinearLayout\n" + "\t\t\tandroid:layout_width=\"match_parent\"\n"
+			+ "\t\t\tandroid:layout_height=\"wrap_content\"\n" + "\t\t\tandroid:orientation=\"vertical\">\n" + "\n"
+			+ "\t\t\t<Button\n" + "\t\t\t\tandroid:layout_height=\"wrap_content\"\n"
+			+ "\t\t\t\tandroid:text=\"转换十进制\"\n" + "\t\t\t\tandroid:layout_width=\"match_parent\"\n"
+			+ "\t\t\t\tandroid:id=\"@+id/con_ten\"\n" + "\t\t\t\tandroid:layout_weight=\"1\"/>\n" + "\n"
+			+ "\t\t\t<Button\n" + "\t\t\t\tandroid:layout_height=\"wrap_content\"\n"
+			+ "\t\t\t\tandroid:text=\"转换十六进制\"\n" + "\t\t\t\tandroid:layout_width=\"match_parent\"\n"
+			+ "\t\t\t\tandroid:id=\"@+id/con_hex\"/>\n" + "\n" + "\t\t\t<Button\n"
+			+ "\t\t\t\tandroid:layout_height=\"wrap_content\"\n" + "\t\t\t\tandroid:text=\"转换二进制\"\n"
+			+ "\t\t\t\tandroid:layout_width=\"match_parent\"\n" + "\t\t\t\tandroid:id=\"@+id/con_two\"/>\n" + "\n"
+			+ "\t\t</LinearLayout>\n" + "\n" + "\t</LinearLayout>\n" + "\n" + "</LinearLayout>\n" + "\n";
 
 	public void parse() {
 		DocumentBuilderFactory factory = null;
@@ -138,22 +101,29 @@ public class DomParser {
 			e.printStackTrace();
 		}
 	}
-int count = 0;
-	//遍历node设置id
-	void setNodesId(Node node){
+	
+	
+
+	int count = 0;
+	
+	
+
+	// 遍历node设置id
+	void setNodesId(Node node) {
 		NodeList nodelist = node.getChildNodes();
-//		System.out.println("node name=" + node.getNodeName() + " value=" + node.getNodeValue() + " type=" + node.getNodeType());
+		// System.out.println("node name=" + node.getNodeName() + " value=" +
+		// node.getNodeValue() + " type=" + node.getNodeType());
 		if (node.getNodeType() == 1) {
 			printfAttributes(node);
 			NamedNodeMap map = node.getAttributes();
 
-//			node.setNamedItem(nodetag);
-			if(node instanceof Element){
+			// node.setNamedItem(nodetag);
+			if (node instanceof Element) {
 				System.out.println("is Element");
 				String id = node.getNodeName();
-				
-				((Element)node).setAttribute("id", id.toLowerCase()+"_"+count);
-				((Element)node).setAttribute("layoutparams", "layoutParams_"+count);
+
+				((Element) node).setAttribute("id", id.toLowerCase() + "_" + count);
+				((Element) node).setAttribute("layoutparams", "layoutParams_" + count);
 				count++;
 			}
 		}
@@ -166,7 +136,8 @@ int count = 0;
 	// 递归输出nodes
 	void printfNodes(Node node) {
 		NodeList nodelist = node.getChildNodes();
-		System.out.println("node name=" + node.getNodeName() + " value=" + node.getNodeValue() + " type=" + node.getNodeType());
+		System.out.println(
+				"node name=" + node.getNodeName() + " value=" + node.getNodeValue() + " type=" + node.getNodeType());
 		if (node.getNodeType() == 1) {
 			printfAttributes(node);
 		}
@@ -182,182 +153,411 @@ int count = 0;
 	void printfAttributes(Node node) {
 		NamedNodeMap map = node.getAttributes();
 		for (int ii = 0; ii < map.getLength(); ii++) {
-			System.out.println("name = " + map.item(ii).getNodeName() + " value=" + map.item(ii).getNodeValue()+" type="+map.item(ii).getNodeType());
+			System.out.println("name = " + map.item(ii).getNodeName() + " value=" + map.item(ii).getNodeValue()
+					+ " type=" + map.item(ii).getNodeType());
 		}
 	}
-	
-	//输出android java代码
-	void printAndroidCode(String className,String name,Node node){
+
+	// 输出android java代码
+	void printAndroidCode(String className, String name, Node node) {
 		NodeList nodelist = node.getChildNodes();
-//		System.out.println("node name=" + node.getNodeName() + " value=" + node.getNodeValue() + " type=" + node.getNodeType());
+		// System.out.println("node name=" + node.getNodeName() + " value=" +
+		// node.getNodeValue() + " type=" + node.getNodeType());
 		if (node.getNodeType() == 1) {
-			//输出代码
-			Element element = (Element)node;
-			System.out.println("    "+element.getNodeName()+" "+element.getAttribute("id")+" = new "+element.getNodeName()+"(context);");
+			// 输出代码
+			Element element = (Element) node;
+			System.out.println("    " + element.getNodeName() + " " + element.getAttribute("id") + " = new "
+					+ element.getNodeName() + "(context);");
 			NamedNodeMap map = node.getAttributes();
 			for (int ii = 0; ii < map.getLength(); ii++) {
 				String key = map.item(ii).getNodeName();
 				String value = element.getAttribute(key);
 				String layout_name = element.getAttribute("id");
-				if(key.equals("android:layout_width")){
+				if (key.equals("android:layout_width")) {
 					String layout_width = element.getAttribute("android:layout_width");
 					String layout_height = element.getAttribute("android:layout_height");
-					if(layout_width.equals("match_parent") || layout_width.equals("fill_parent")){
+					if (layout_width.equals("match_parent") || layout_width.equals("fill_parent")) {
 						layout_width = "ViewGroup.LayoutParams.MATCH_PARENT";
 					}
-					if(layout_width.equals("wrap_content")){
+					if (layout_width.equals("wrap_content")) {
 						layout_width = "ViewGroup.LayoutParams.WRAP_CONTENT";
 					}
-					if(layout_height.equals("match_parent") || layout_height.equals("fill_parent")){
+					if (layout_height.equals("match_parent") || layout_height.equals("fill_parent")) {
 						layout_height = "ViewGroup.LayoutParams.MATCH_PARENT";
 					}
-					if(layout_height.equals("wrap_content")){
+					if (layout_height.equals("wrap_content")) {
 						layout_height = "ViewGroup.LayoutParams.WRAP_CONTENT";
 					}
-					if(className.equals("LinearLayout")){
-						System.out.println("    LinearLayout.LayoutParams "+element.getAttribute("layoutparams")+" = new LinearLayout.LayoutParams("+layout_width+","+layout_height+");");
+					if (className.equals("LinearLayout")) {
+						System.out.println("    LinearLayout.LayoutParams " + element.getAttribute("layoutparams")
+								+ " = new LinearLayout.LayoutParams(" + layout_width + "," + layout_height + ");");
+					} else
+						System.out.println("    ViewGroup.LayoutParams " + element.getAttribute("layoutparams")
+								+ " = new ViewGroup.LayoutParams(" + layout_width + "," + layout_height + ");");
+					if (element.getAttribute("android:layout_weight") != null
+							&& element.getAttribute("android:layout_weight").length() != 0) {
+						System.out.println("    " + element.getAttribute("layoutparams") + ".weight = "
+								+ element.getAttribute("android:layout_weight") + "f;");
 					}
-					else
-					System.out.println("    ViewGroup.LayoutParams "+element.getAttribute("layoutparams")+" = new ViewGroup.LayoutParams("+layout_width+","+layout_height+");");
-					if(element.getAttribute("android:layout_weight")!=null && element.getAttribute("android:layout_weight").length()!=0){
-						System.out.println("    "+element.getAttribute("layoutparams")+".weight = "+element.getAttribute("android:layout_weight")+"f;");
-					}
-//					System.out.println("    "+element.getAttribute("id")+"." + "setLayoutWidth(" + "" + map.item(ii).getNodeValue()+");");
+					// System.out.println(" "+element.getAttribute("id")+"." +
+					// "setLayoutWidth(" + "" +
+					// map.item(ii).getNodeValue()+");");
 				}
-				else if(key.equals("android:layout_height")){
-//					System.out.println("    "+element.getAttribute("id")+"." + "setLayoutHeight(" + "" + map.item(ii).getNodeValue()+");");
+				else if(key.equals("android:layout_margin")){
+					String layout_params = element.getAttribute("layoutparams");
+					String margin = XmlUtil.getSize(value);
+					System.out.println("    "+layout_params+".setMargins("+margin+","+margin+","+margin+","+margin+");");
 				}
-				else if(key.equals("android:theme")){
-					System.out.println("    "+layout_name+".setTheme("+value+");");
-				}
-				else if(key.equals("android:background")){
-					if(value.startsWith("#")){
-						System.out.println("    "+layout_name+".setBackgroundColor(0x"+value.substring(1)+");");
-					}
-					else if(value.startsWith("@color/")){
-						
-					}
-					else if(value.startsWith("@drawable/")){
-						
-					}
-					else
-					System.out.println("    "+layout_name+".setBackground("+value+");");
-				}
-				else if(key.equals("android:orientation")){
-					if(value.equals("vertical")){
+				else if (key.equals("android:layout_height")) {
+					// System.out.println(" "+element.getAttribute("id")+"." +
+					// "setLayoutHeight(" + "" +
+					// map.item(ii).getNodeValue()+");");
+				} else if (key.equals("android:theme")) {
+					System.out.println("    " + layout_name + ".setTheme(" + value + ");");
+				} else if (key.equals("android:background")) {
+					if (value.startsWith("#")) {
+						System.out.println("    " + layout_name + ".setBackgroundColor(" + XmlUtil.getColorHex(value) + ");");
+					} else if (value.startsWith("@color/")) {
+
+					} else if (value.startsWith("@drawable/")) {
+
+					} else
+						System.out.println("    " + layout_name + ".setBackground(" + value + ");");
+				} else if (key.equals("android:orientation")) {
+					if (value.equals("vertical")) {
 						value = "LinearLayout.VERTICAL";
-					}
-					else if(value.equals("horizontal")){
+					} else if (value.equals("horizontal")) {
 						value = "Linearlayout.HORIZONTAL";
 					}
-					System.out.println("    "+layout_name+".setOrientation("+value+");");
-				}
-				else if(key.equals("android:src")){
-					System.out.println("    "+layout_name+".setImage("+value+");");
-				}
-				else if(key.equals("android:text")){
-					System.out.println("    "+layout_name+".setText(\""+value+"\");");
-				}
-				else if(key.equals("android:textColor")){
-					if(value.startsWith("#")){
-						System.out.println("    "+layout_name+".setTextColor(0x"+value.substring(1)+");");
+					System.out.println("    " + layout_name + ".setOrientation(" + value + ");");
+				} else if (key.equals("android:src")) {
+					System.out.println("    " + layout_name + ".setImage(" + value + ");");
+				} else if (key.equals("android:text")) {
+					if(value.startsWith("@string/")){
+						value = "R.string."+value.substring(8);
+					}
+					System.out.println("    " + layout_name + ".setText(\"" + value + "\");");
+				} else if (key.equals("android:textColor")) {
+					if (value.startsWith("#")) {
+						System.out.println("    " + layout_name + ".setTextColor(" + XmlUtil.getColorHex(value) + ");");
+					} 
+					else if(value.startsWith("@color/")){
+						System.out.println("    " + layout_name + ".setTextColor(R.color." + value.substring(7) + ");");
 					}
 					else
-					System.out.println("    "+layout_name+".setTextColor("+value+");");
+						System.out.println("    " + layout_name + ".setTextColor(" + value + ");");
 				}
-				else if(key.equals("android:layout_weight")){
-					
+				else if(key.equals("android:textSize")){
+					System.out.println("    "+layout_name+".setTextSize("+XmlUtil.getFontSize(value)+");");
 				}
-				else if(key.equals("android:inputType")){
+				else if (key.equals("android:layout_weight")) {
+
+				} else if (key.equals("android:inputType")) {
 					String items[] = value.split("\\|");
 					ArrayList<String> list_items = new ArrayList<String>();
-					for(String item:items)
-					list_items.add(item);
-//					System.out.println("........................."+items+ " "+list_items);
+					for (String item : items)
+						list_items.add(item);
+					// System.out.println("........................."+items+ "
+					// "+list_items);
 					value = "";
-					if(list_items.contains("text")){
+					if (list_items.contains("text")) {
 						value += "InputType.TYPE_CLASS_TEXT";
 					}
-					if(list_items.contains("number")){
-						if(value.length()>0)value+="|";
+					if (list_items.contains("number")) {
+						if (value.length() > 0)
+							value += "|";
 						value += "InputType.TYPE_CLASS_NUMBER";
 					}
-					if(list_items.contains("textCapCharacters")){
-						if(value.length()>0)value+="|";
+					if (list_items.contains("textCapCharacters")) {
+						if (value.length() > 0)
+							value += "|";
 						value += "InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS";
 					}
-					if(list_items.contains("textMultiLine")){
-						if(value.length()>0) value+="|";
+					if (list_items.contains("textMultiLine")) {
+						if (value.length() > 0)
+							value += "|";
 						value += "InputType.TYPE_TEXT_FLAG_MULTI_LINE";
 					}
-					System.out.println("    "+layout_name+".setInputType("+value+");");
-				}
-				else if(key.equals("android:typeface")){
-					if(value.equals("monospace")){
+					System.out.println("    " + layout_name + ".setInputType(" + value + ");");
+				} else if (key.equals("android:typeface")) {
+					if (value.equals("monospace")) {
 						value = "Typeface.MONOSPACE";
-					}
-					else if(value.equals("serif")){
+					} else if (value.equals("serif")) {
 						value = "Typeface.SERIF";
-					}
-					else if(value.equals("bold")){
+					} else if (value.equals("bold")) {
 						value = "Typeface.DEFAULT_BOLD";
 					}
-					
-					System.out.println("    "+layout_name+".setTypeface("+value+");");
+					else if(value.equals("sans"))
+					{
+						value = "Typeface.SANS_SERIF";
+					}
+
+					System.out.println("    " + layout_name + ".setTypeface(" + value + ");");
+				} 
+				else if(key.equals("android:gravity")){
+					String gravity = "";
+					if(value.indexOf("center")>=0)
+						gravity+="|Gravity.CENTER";
+					if(value.indexOf("left")>=0)
+						gravity+="|Gravity.LEFT";
+					if(value.indexOf("right")>=0)
+						gravity+="|Gravity.RIGHT";
+					if(value.indexOf("top")>=0)
+						gravity+="|Gravity.TOP";
+					if(value.indexOf("bottom")>=0)
+						gravity+="|Gravity.BOTTOM";
+					System.out.println("    " + layout_name+".setGravity("+gravity.substring(1)+");");
 				}
-				else if(key.equals("id")){
-					
-				}
-				else if(key.equals("layoutparams")){
-					
-				}
-				else if(key.equals("xmlns:app")){
-					
-				}
-				else if(key.equals("xmlns:android")){
-					
-				}
-				else if(key.equals("xmlns:tools")){
-					
-				}
-				else if(key.equals("android:id")){
-					if(value.startsWith("@+id/") || value.startsWith("@id/")){
-						System.out.println("    "+layout_name+".setId(R.id."+value.substring(value.indexOf("/")+1)+");");
+				else if(key.equals("android:scrollbars")){
+					if(value.equals("vertical"))
+					{
+						System.out.println("    " + layout_name+".setVerticalScrollBarEnabled(true);");
+						System.out.println("    "+layout_name + ".setScrollBarStyle(View.SCROLLBARS_OUTSIDE_INSET);");
+					}
+					else if(value.equals("none"))
+					{
+						System.out.println("    "+ layout_name + ".setVerticalScrollBarEnabled(false);");
 					}
 					else
-					System.out.println("    "+layout_name+".setId("+value+");");
+					{
+						System.out.println("    " + layout_name + ".setScrollBarStyle(view.SCROLLBARS_INSIDE_OVERLAY);");
+					}
 				}
-				else if(key.startsWith("android:")){
+				else if(key.equals("android:shadowColor")){
+					String shadowDx = element.getAttribute("android:shadowDx");
+					String shadowDy = element.getAttribute("android:shadowDy");
+					String shadowColor = value;
+					if(shadowColor.startsWith("#")){
+						shadowColor = XmlUtil.getColorHex(shadowColor);
+					}
+					else if(shadowColor.startsWith("@color/")){
+						shadowColor = "R.color."+shadowColor.substring(7);
+					}
+					System.out.println("    "+layout_name+".setShadowLayer("+0+", "+XmlUtil.getSize(shadowDx)+", "+XmlUtil.getSize(shadowDy)+", "+shadowColor+");");
+				}
+				else if(key.endsWith("android:scaleType")){
+					if(value.equals("matrix"))
+					{
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.MATRIX);");
+					}
+					else if(value.equals("fitXY"))
+					{
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_XY);");
+					}
+					else if(value.equals("fitStart"))
+					{
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_START);");
+						
+					}
+					else if(value.equals("fitCenter"))
+					{
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_CENTER);");
+						
+					}
+					else if(value.equals("fitEnd"))
+					{
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_END);");
+						
+					}else if(value.equals("center"))
+					{
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.CENTER);");
+						
+					}
+					else if(value.equals("centerCrop"))
+					{
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.CENTER_CROP);");
+						
+					}
+					else if(value.equals("centerInside"))
+					{
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.CENTER_INSIDE);");
+						
+					}
+				}
+				else if(key.equals("android:tint")){
+					String color = value;
+					if(color.startsWith("#")){
+						color = XmlUtil.getColorHex(color);
+					}
+					else if(color.startsWith("@color/")){
+						color = "R.color."+color.substring(7);
+					}
+					System.out.println("    "+layout_name+".setColorFilter("+color+");");
+				}
+				else if(key.equals("android:paddingTop")){
+					String padding_top = element.getAttribute("android:paddingTop");
+					String padding_bottom = element.getAttribute("android:paddingBottom");
+					String padding_left = element.getAttribute("android:paddingLeft");
+					String padding_right = element.getAttribute("android:paddingRight");
+					element.removeAttribute("android:paddingTop");
+					element.removeAttribute("android:paddingBottom");
+					element.removeAttribute("android:paddingLeft");
+					element.removeAttribute("android:paddingRight");
+					padding_top = XmlUtil.getSize(padding_top);
+					padding_left = XmlUtil.getSize(padding_left);
+					padding_right = XmlUtil.getSize(padding_right);
+					padding_bottom = XmlUtil.getSize(padding_bottom);
+					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
+				}
+				else if(key.equals("android:paddingBottom")){
+					String padding_top = element.getAttribute("android:paddingTop");
+					String padding_bottom = element.getAttribute("android:paddingBottom");
+					String padding_left = element.getAttribute("android:paddingLeft");
+					String padding_right = element.getAttribute("android:paddingRight");
+					element.removeAttribute("android:paddingTop");
+					element.removeAttribute("android:paddingBottom");
+					element.removeAttribute("android:paddingLeft");
+					element.removeAttribute("android:paddingRight");
+					padding_top = XmlUtil.getSize(padding_top);
+					padding_left = XmlUtil.getSize(padding_left);
+					padding_right = XmlUtil.getSize(padding_right);
+					padding_bottom = XmlUtil.getSize(padding_bottom);
+					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
+			
+				}
+				else if(key.equals("android:paddingLeft")){
+					String padding_top = element.getAttribute("android:paddingTop");
+					String padding_bottom = element.getAttribute("android:paddingBottom");
+					String padding_left = element.getAttribute("android:paddingLeft");
+					String padding_right = element.getAttribute("android:paddingRight");
+					element.removeAttribute("android:paddingTop");
+					element.removeAttribute("android:paddingBottom");
+					element.removeAttribute("android:paddingLeft");
+					element.removeAttribute("android:paddingRight");
+					padding_top = XmlUtil.getSize(padding_top);
+					padding_left = XmlUtil.getSize(padding_left);
+					padding_right = XmlUtil.getSize(padding_right);
+					padding_bottom = XmlUtil.getSize(padding_bottom);
+					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
+			
+				}
+				else if(key.equals("android:paddingRight")){
+					String padding_top = element.getAttribute("android:paddingTop");
+					String padding_bottom = element.getAttribute("android:paddingBottom");
+					String padding_left = element.getAttribute("android:paddingLeft");
+					String padding_right = element.getAttribute("android:paddingRight");
+					element.removeAttribute("android:paddingTop");
+					element.removeAttribute("android:paddingBottom");
+					element.removeAttribute("android:paddingLeft");
+					element.removeAttribute("android:paddingRight");
+					padding_top = XmlUtil.getSize(padding_top);
+					padding_left = XmlUtil.getSize(padding_left);
+					padding_right = XmlUtil.getSize(padding_right);
+					padding_bottom = XmlUtil.getSize(padding_bottom);
+					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
+			
+				}
+				else if(key.equals("android:padding")){
+					System.out.println("    "+layout_name+".setPadding("+value+", "+value+", "+value+", "+value+");");
+				}
+				else if(key.equals("android:alpha")){
+					System.out.println("    "+layout_name+".setAlpha("+value+");");
+				}
+				else if(key.equals("android:textStyle")){
+					if(value.equals("bold"))
+					{
+						System.out.println("    "+layout_name+".setTypeface("+layout_name+".getTypeface(), Typeface.BOLD);" );
+					}
+					if(value.equals("italic"))
+					{
+						System.out.println("    "+layout_name+".setTypeface("+layout_name+".getTypeface(), Typeface.ITALIC);" );
+					}
+					if(value.equals("bold_italic")){
+						System.out.println("    "+layout_name+".setTypeface("+layout_name+".getTypeface(), Typeface.BOLD_ITALIC);" );
+					}
 					
 				}
+				else if(key.equals("visibility")){
+					
+				    if(value.equals("visible")){
+				    	System.out.println("    "+layout_name+".setVisibility(View.VISIBLE);");
+				    }
+							
+					else if(value.equals("invisible")){
+						System.out.println("    "+layout_name+".setVisibility(View.INVISIBLE);");
+					}
+							
+					else if(value.equals("gone")){
+						System.out.println("    "+layout_name+".setVisibility(View.GONE);");
+					}
+							
+					
+				}
+				else if(key.equals("android:ems")){
+					System.out.println("    "+layout_name+".setEms("+XmlUtil.getSize(value)+");");
+				}
+				else if(key.equals("android:lines"))
+				{
+					System.out.println("    "+layout_name+".setLines("+value+");");
+				}
+				else if(key.equals("android:hint"))
+				{
+					if(value.startsWith("@string/")){
+						value = "R.string."+value.substring(8);
+					}
+					System.out.println("    "+layout_name+".setHint(\""+value+"\");");
+				}
+				else if(key.equals("android:drawable")){
+					if(value.startsWith("@drawable/")){
+						value = "R.drawable."+value.substring(10);
+					}
+					else if(value.startsWith("@mipmap/")){
+						value = "R.mipmap."+value.substring(8);
+					}
+					System.out.println("    "+layout_name+".setImageDrawable(context.getDrawable("+value+"));");
+				}
+				else if (key.equals("id")) {
+
+				} else if (key.equals("layoutparams")) {
+
+				} else if (key.equals("xmlns:app")) {
+
+				} else if (key.equals("xmlns:android")) {
+
+				} else if (key.equals("xmlns:tools")) {
+
+				} else if (key.equals("android:id")) {
+					if (value.startsWith("@+id/") || value.startsWith("@id/")) {
+						System.out.println(
+								"    " + layout_name + ".setId(R.id." + value.substring(value.indexOf("/") + 1) + ");");
+					} else
+						System.out.println("    " + layout_name + ".setId(" + value + ");");
+				} else if (key.startsWith("android:")) {
+					System.out.println(""+layout_name+"."+key.substring(8)+" = "+value);
+				} 
+				else if(key.startsWith("app:")){
+					System.out.println(""+layout_name+"."+key.substring(4)+" = "+value);
+				}
 				else
-				System.out.println("    "+element.getAttribute("id")+"." + map.item(ii).getNodeName() + " = " + map.item(ii).getNodeValue()+";");
+					System.out.println("    " + element.getAttribute("id") + "." + map.item(ii).getNodeName() + " = "
+							+ map.item(ii).getNodeValue() + ";");
 			}
-			
+
 			for (int n = 0; n < nodelist.getLength(); n++) {
 				Node nodeitem = nodelist.item(n);
-				
-//				System.out.println("node item = " + nodeitem.getNodeName() + " value=" + nodeitem.getNodeValue() + " type="
-//						+ nodeitem.getNodeType() + " ");
-				printAndroidCode(element.getNodeName(),element.getAttribute("id"), nodeitem);
+
+				// System.out.println("node item = " + nodeitem.getNodeName() +
+				// " value=" + nodeitem.getNodeValue() + " type="
+				// + nodeitem.getNodeType() + " ");
+				printAndroidCode(element.getNodeName(), element.getAttribute("id"), nodeitem);
 			}
 		}
-		
+
 		if (node.getNodeType() == 1) {
-			Element element1 = (Element)node;
-		System.out.println("    "+name+".addView("+element1.getAttribute("id")+","+element1.getAttribute("layoutparams")+");");
+			Element element1 = (Element) node;
+			System.out.println("    " + name + ".addView(" + element1.getAttribute("id") + ","
+					+ element1.getAttribute("layoutparams") + ");");
 		}
 	}
-	
-	//输出Swift代码
-	void printSwiftCode(Node node){
-		
+
+	// 输出Swift代码
+	void printSwiftCode(Node node) {
+
 	}
-	
-	//输出kotlin代码
-	void printKotlinCode(Node node){
-		
+
+	// 输出kotlin代码
+	void printKotlinCode(Node node) {
+
 	}
-	
 
 }
