@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.plaf.basic.BasicBorders.MarginBorder;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,6 +17,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.UserDataHandler;
+
+import com.xl.game.math.Str;
 
 public class DomParser {
 
@@ -29,80 +32,152 @@ public class DomParser {
 			+"<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
 			+"    android:layout_width=\"match_parent\"\n"
 			+"    android:layout_height=\"match_parent\"\n"
-			+"    android:orientation=\"vertical\"\n"
-			+"    android:paddingLeft=\"16dp\"\n"
-			+"    android:paddingTop=\"24dp\"\n"
-			+"    android:paddingRight=\"16dp\">\n"
+			+"    android:orientation=\"vertical\">\n"
+			+"    <LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+			+"        android:orientation=\"vertical\" android:layout_width=\"match_parent\"\n"
+			+"        android:background=\"@color/colorPrimary\"\n"
+			+"        android:layout_height=\"wrap_content\">\n"
+			+"        <FrameLayout\n"
+			+"            android:layout_width=\"match_parent\"\n"
+			+"            android:layout_height=\"wrap_content\">\n"
+			+"            <LinearLayout\n"
+			+"                android:layout_width=\"wrap_content\"\n"
+			+"                android:paddingLeft=\"8dp\"\n"
+			+"                android:paddingRight=\"8dp\"\n"
+			+"                android:gravity=\"center|left\"\n"
+			+"                android:orientation=\"horizontal\"\n"
+			+"                android:layout_height=\"48dp\">\n"
+			+"                <LinearLayout\n"
+			+"                    android:id=\"@+id/layout_back\"\n"
+			+"                    android:orientation=\"horizontal\"\n"
+			+"                    android:layout_width=\"wrap_content\"\n"
+			+"                    android:layout_height=\"wrap_content\">\n"
+			+"                    <ImageView\n"
+			+"                        android:id=\"@+id/toolbar_backImg\"\n"
+			+"                        android:src=\"@drawable/toolbar_back\"\n"
+			+"                        android:layout_width=\"22dp\"\n"
+			+"                        android:layout_height=\"22dp\"/>\n"
+			+"                    <TextView\n"
+			+"                        android:paddingLeft=\"8dp\"\n"
+			+"                        android:id=\"@+id/toolbar_backText\"\n"
+			+"                        android:textSize=\"@dimen/font_h3\"\n"
+			+"                        android:textColor=\"@color/white\"\n"
+			+"                        android:layout_width=\"wrap_content\"\n"
+			+"                        android:layout_height=\"wrap_content\"/>\n"
 			+"\n"
-			+"    <TextView\n"
-			+"        android:layout_width=\"wrap_content\"\n"
-			+"        android:layout_height=\"wrap_content\"\n"
-			+"        android:text=\"修改密码\"\n"
-			+"        android:textSize=\"@dimen/font_h1\" />\n"
+			+"                </LinearLayout>\n"
 			+"\n"
-			+"    <View\n"
+			+"                <View\n"
+			+"                    android:layout_weight=\"1.0\"\n"
+			+"                    android:layout_width=\"wrap_content\"\n"
+			+"                    android:layout_height=\"wrap_content\"/>\n"
+			+"\n"
+			+"\n"
+			+"            </LinearLayout>\n"
+			+"\n"
+			+"            <TextView\n"
+			+"                android:text=\"标题\"\n"
+			+"                android:textSize=\"@dimen/font_h2\"\n"
+			+"                android:textColor=\"@color/white\"\n"
+			+"                android:singleLine=\"true\"\n"
+			+"                android:ellipsize=\"end\"\n"
+			+"                android:maxWidth=\"240dp\"\n"
+			+"                android:gravity=\"center\"\n"
+			+"                android:layout_gravity=\"center\"\n"
+			+"                android:id=\"@+id/toolbar_title\"\n"
+			+"                android:layout_width=\"280dp\"\n"
+			+"                android:layout_height=\"wrap_content\" />\n"
+			+"            <ImageView\n"
+			+"                android:id=\"@+id/img_share\"\n"
+			+"                android:paddingRight=\"8dp\"\n"
+			+"\n"
+			+"                android:layout_gravity=\"end|center\"\n"
+			+"                android:src=\"@drawable/ic_share\"\n"
+			+"                android:layout_width=\"32dip\"\n"
+			+"                android:layout_height=\"32dip\"/>\n"
+			+"\n"
+			+"        </FrameLayout>\n"
+			+"\n"
+			+"\n"
+			+"\n"
+			+"    </LinearLayout>\n"
+			+"    <LinearLayout\n"
+			+"        android:layout_weight=\"1.0\"\n"
 			+"        android:layout_width=\"match_parent\"\n"
-			+"        android:layout_height=\"24dp\" />\n"
+			+"        android:layout_height=\"match_parent\">\n"
 			+"\n"
-			+"    <TextView\n"
-			+"        android:layout_width=\"wrap_content\"\n"
-			+"        android:layout_height=\"wrap_content\"\n"
-			+"        android:text=\"密码8至16位，建议包含数字、符号、字母中至少两种元素\"\n"
-			+"        android:textColor=\"@color/text_gray\" />\n"
+			+"        <com.ocketautoparts.qimopei.view.XWebView\n"
+			+"            android:id=\"@+id/webview\"\n"
+			+"            android:layout_width=\"match_parent\"\n"
+			+"            android:layout_height=\"match_parent\"\n"
+			+"            android:layout_weight=\"1.0\" />\n"
 			+"\n"
-			+"    <View\n"
+			+"    </LinearLayout>\n"
+			+"\n"
+			+"    <LinearLayout\n"
 			+"        android:layout_width=\"match_parent\"\n"
-			+"        android:layout_height=\"16dp\" />\n"
+			+"        android:layout_height=\"50dip\"\n"
+			+"        android:gravity=\"center\"\n"
+			+"        android:elevation=\"3.0dp\"\n"
+			+"        android:background=\"@color/white\"\n"
+			+"        android:orientation=\"horizontal\">\n"
 			+"\n"
-			+"    <TextView\n"
-			+"        android:layout_width=\"wrap_content\"\n"
-			+"        android:layout_height=\"wrap_content\"\n"
+			+"        <LinearLayout\n"
+			+"            android:id=\"@+id/layout_home\"\n"
+			+"            android:background=\"@color/white\"\n"
+			+"            android:layout_width=\"match_parent\"\n"
+			+"            android:layout_height=\"match_parent\"\n"
+			+"            android:gravity=\"center\"\n"
+			+"            android:layout_weight=\"1.0\">\n"
 			+"\n"
-			+"        android:text=\"输入旧密码\"\n"
-			+"        android:textColor=\"@color/text_gray\" />\n"
+			+"            <ImageView\n"
+			+"                android:layout_width=\"28dip\"\n"
+			+"                android:layout_height=\"28dip\"\n"
+			+"                android:tint=\"@color/colorAccent\"\n"
+			+"                android:src=\"@drawable/ic_home\" />\n"
 			+"\n"
-			+"    <EditText\n"
-			+"        android:id=\"@+id/edit_oldpassword\"\n"
-			+"        android:inputType=\"textPassword\"\n"
-			+"        android:singleLine=\"true\"\n"
-			+"        android:layout_width=\"match_parent\"\n"
-			+"        android:layout_height=\"wrap_content\" />\n"
+			+"            <TextView\n"
+			+"                android:paddingLeft=\"15dp\"\n"
+			+"                android:textColor=\"@color/colorAccent\"\n"
+			+"                android:layout_width=\"wrap_content\"\n"
+			+"                android:textSize=\"@dimen/font_h3\"\n"
+			+"                android:layout_height=\"wrap_content\"\n"
+			+"                android:text=\"查看主页\" />\n"
 			+"\n"
-			+"    <View\n"
-			+"        android:layout_width=\"match_parent\"\n"
-			+"        android:layout_height=\"16dp\" />\n"
+			+"        </LinearLayout>\n"
 			+"\n"
-			+"    <TextView\n"
-			+"        android:layout_width=\"wrap_content\"\n"
-			+"        android:layout_height=\"wrap_content\"\n"
-			+"        android:text=\"输入新密码\"\n"
-			+"        android:textColor=\"@color/text_gray\" />\n"
+			+"        <LinearLayout\n"
+			+"            android:id=\"@+id/layout_server\"\n"
+			+"            android:background=\"@color/colorAccent\"\n"
+			+"            android:gravity=\"center\"\n"
+			+"            android:layout_width=\"match_parent\"\n"
+			+"            android:layout_height=\"match_parent\"\n"
 			+"\n"
-			+"    <EditText\n"
-			+"        android:singleLine=\"true\"\n"
-			+"        android:inputType=\"textPassword\"\n"
-			+"        android:id=\"@+id/edit_newpassword\"\n"
-			+"        android:layout_width=\"match_parent\"\n"
-			+"        android:layout_height=\"wrap_content\" />\n"
+			+"            android:layout_weight=\"1.0\">\n"
 			+"\n"
-			+"    <TextView\n"
-			+"        android:id=\"@+id/text_forgetpassword\"\n"
-			+"        android:layout_width=\"wrap_content\"\n"
-			+"        android:layout_height=\"wrap_content\"\n"
-			+"        android:drawableRight=\"@drawable/right_arrow\"\n"
-			+"        android:text=\"忘记密码 \"\n"
-			+"        android:textColor=\"@color/text_gray\" />\n"
+			+"            <ImageView\n"
+			+"                android:tint=\"@color/white\"\n"
+			+"                android:layout_width=\"28dip\"\n"
+			+"                android:layout_height=\"28dip\"\n"
+			+"                android:src=\"@drawable/home_kefu\" />\n"
 			+"\n"
-			+"    <View\n"
-			+"        android:layout_width=\"match_parent\"\n"
-			+"        android:layout_height=\"24dp\" />\n"
+			+"            <TextView\n"
+			+"                android:textColor=\"@color/white\"\n"
+			+"                android:paddingLeft=\"15dp\"\n"
+			+"                android:layout_width=\"wrap_content\"\n"
+			+"                android:layout_height=\"wrap_content\"\n"
+			+"                android:textSize=\"@dimen/font_h3\"\n"
+			+"                android:text=\"立即咨询\">\n"
 			+"\n"
-			+"    <Button\n"
-			+"        android:id=\"@+id/btn_submit\"\n"
-			+"        android:layout_width=\"match_parent\"\n"
-			+"        android:layout_height=\"wrap_content\"\n"
-			+"        android:text=\"确定\" />\n"
-			+"</LinearLayout>";
+			+"            </TextView>\n"
+			+"\n"
+			+"        </LinearLayout>\n"
+			+"    </LinearLayout>\n"
+			+"\n"
+			+"</LinearLayout>\n";
+
+
+
 
 
 
@@ -172,13 +247,24 @@ public class DomParser {
 		if (node.getNodeType() == 1) {
 			printfAttributes(node);
 			NamedNodeMap map = node.getAttributes();
-
+			
 			// node.setNamedItem(nodetag);
 			if (node instanceof Element) {
 				System.out.println("is Element");
+				Element element = (Element) node;
 				String id = node.getNodeName();
-
+				if(id.indexOf('.')>0){
+					id = id.substring(Str.strrchr(id, '.'));
+				}
+				String view_name = id.toLowerCase() + "_" + count;
+				String key_id = element.getAttribute("android:id");
+				if(key_id.length()!=0){
+					if(key_id.startsWith("@id/") || key_id.startsWith("@+id/")){
+						view_name = key_id.substring(key_id.indexOf('/')+1);
+					}
+				}
 				((Element) node).setAttribute("id", id.toLowerCase() + "_" + count);
+				element.setAttribute("name", view_name);
 				((Element) node).setAttribute("layoutparams", "layoutParams_" + count);
 				count++;
 			}
@@ -222,70 +308,139 @@ public class DomParser {
 		if (node.getNodeType() == 1) {
 			// 输出代码
 			Element element = (Element) node;
-			System.out.println("    " + element.getNodeName() + " " + element.getAttribute("id") + " = new "
+			System.out.println("    " + element.getNodeName() + " " + element.getAttribute("name") + " = new "
 					+ element.getNodeName() + "(context);");
+			String layout_name = element.getAttribute("name");
+			//优先处理margin top layout_width layout_height layout_weight
+			String layout_width = element.getAttribute("android:layout_width");
+			String layout_height = element.getAttribute("android:layout_height");
+			String layout_weight = element.getAttribute("android:layout_weight");
+			if (layout_width.equals("match_parent") || layout_width.equals("fill_parent")) {
+				layout_width = "ViewGroup.LayoutParams.MATCH_PARENT";
+			}
+			else if (layout_width.equals("wrap_content")) {
+				layout_width = "ViewGroup.LayoutParams.WRAP_CONTENT";
+			}
+			else {
+				layout_width = XmlUtil.getSize(layout_width);
+			}
+			
+			if (layout_height.equals("match_parent") || layout_height.equals("fill_parent")) {
+				layout_height = "ViewGroup.LayoutParams.MATCH_PARENT";
+			}
+			else if (layout_height.equals("wrap_content")) {
+				layout_height = "ViewGroup.LayoutParams.WRAP_CONTENT";
+			}
+			else {
+				layout_height = XmlUtil.getSize(layout_height);
+			}
+			if (className.equals("LinearLayout")) {
+				System.out.println("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");");
+			}
+			else if(className.equals("FrameLayout")){
+				System.out.println("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");");
+			}
+			else if(className.equals("TableLayout")){
+				System.out.println("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");");
+			}
+			else if(className.equals("GridLayout")){
+				System.out.println("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");");
+			}
+			else if(className.equals("RelativeLayout")){
+				System.out.println("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");");
+			}
+			else
+				System.out.println("    ViewGroup.LayoutParams " + element.getAttribute("layoutparams")
+						+ " = new ViewGroup.LayoutParams(" + layout_width + "," + layout_height + ");");
+			if (layout_weight.length() != 0) {
+				System.out.println("    " + element.getAttribute("layoutparams") + ".weight = "
+						+ element.getAttribute("android:layout_weight") + "f;");
+			}
+			String margin = element.getAttribute("android:layout_margin");
+			String margin_top = element.getAttribute("android:layout_marginTop");
+			String margin_bottom = element.getAttribute("android:layout_marginBottom");
+			String margin_left = element.getAttribute("android:layout_marginLeft");
+			String margin_right = element.getAttribute("android:layout_marginRight");
+			if(margin.length()!=0){
+				margin_top = margin;
+				margin_left = margin;
+				margin_right = margin;
+				margin_bottom = margin;
+			}
+			if(margin_left.length()!=0 || margin_top.length()!=0 || margin_right.length()!=0 || margin_bottom.length()!=0){
+				margin_left = XmlUtil.getSize(margin_left);
+				margin_top = XmlUtil.getSize(margin_top);
+				margin_right = XmlUtil.getSize(margin_right);
+				margin_bottom = XmlUtil.getSize(margin_bottom);
+				System.out.println("    "+element.getAttribute("layoutparams")+ ".setMargins("+margin_left+", "+margin_top+", "+margin_right+", "+margin_bottom+");");
+			}
+			
+			String padding = element.getAttribute("android:padding");
+			String padding_left = element.getAttribute("android:paddingLeft");
+			String padding_right = element.getAttribute("android:paddingRight");
+			String padding_top = element.getAttribute("android:paddingTop");
+			String padding_bottom = element.getAttribute("android:paddingBottom");
+			if(padding.length()!=0){
+				padding_left = padding;
+				padding_top = padding;
+				padding_right = padding;
+				padding_bottom = padding;
+			}
+			if(padding_left.length()!=0 || padding_top.length()!=0 || padding_bottom.length()!=0 || padding_right.length()!=0){
+				padding_left = XmlUtil.getSize(padding_left);
+				padding_top = XmlUtil.getSize(padding_top);
+				padding_right = XmlUtil.getSize(padding_right);
+				padding_bottom = XmlUtil.getSize(padding_bottom);
+				System.out.println("    "+layout_name+ ".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
+	
+			}
+			
 			NamedNodeMap map = node.getAttributes();
 			for (int ii = 0; ii < map.getLength(); ii++) {
 				String key = map.item(ii).getNodeName();
 				String value = element.getAttribute(key);
-				String layout_name = element.getAttribute("id");
+				
 				if (key.equals("android:layout_width")) {
-					String layout_width = element.getAttribute("android:layout_width");
-					String layout_height = element.getAttribute("android:layout_height");
-					if (layout_width.equals("match_parent") || layout_width.equals("fill_parent")) {
-						layout_width = "ViewGroup.LayoutParams.MATCH_PARENT";
-					}
-					else if (layout_width.equals("wrap_content")) {
-						layout_width = "ViewGroup.LayoutParams.WRAP_CONTENT";
-					}
-					else {
-						layout_width = XmlUtil.getSize(layout_width);
-					}
-					
-					if (layout_height.equals("match_parent") || layout_height.equals("fill_parent")) {
-						layout_height = "ViewGroup.LayoutParams.MATCH_PARENT";
-					}
-					else if (layout_height.equals("wrap_content")) {
-						layout_height = "ViewGroup.LayoutParams.WRAP_CONTENT";
-					}
-					else {
-						layout_height = XmlUtil.getSize(layout_height);
-					}
 					
 					
 					
-					if (className.equals("LinearLayout")) {
-						System.out.println("    LinearLayout.LayoutParams " + element.getAttribute("layoutparams")
-								+ " = new LinearLayout.LayoutParams(" + layout_width + "," + layout_height + ");");
-					} else
-						System.out.println("    ViewGroup.LayoutParams " + element.getAttribute("layoutparams")
-								+ " = new ViewGroup.LayoutParams(" + layout_width + "," + layout_height + ");");
-					if (element.getAttribute("android:layout_weight") != null
-							&& element.getAttribute("android:layout_weight").length() != 0) {
-						System.out.println("    " + element.getAttribute("layoutparams") + ".weight = "
-								+ element.getAttribute("android:layout_weight") + "f;");
-					}
-					// System.out.println(" "+element.getAttribute("id")+"." +
-					// "setLayoutWidth(" + "" +
-					// map.item(ii).getNodeValue()+");");
+					
+					
+					
+
 				}
 				else if(key.equals("android:layout_margin")){
-					String layout_params = element.getAttribute("layoutparams");
-					String margin = XmlUtil.getSize(value);
-					System.out.println("    "+layout_params+".setMargins("+margin+","+margin+","+margin+","+margin+");");
+				}
+				else if(key.equals("android:layout_marginTop")){
+					
+				}
+				else if(key.equals("android:layout_marginBottom")){
+					
+				}
+				else if(key.equals("android:layout_marginLeft")){
+					
+				}
+				else if(key.equals("android:layout_marginRight")){
+					
 				}
 				else if (key.equals("android:layout_height")) {
-					// System.out.println(" "+element.getAttribute("id")+"." +
-					// "setLayoutHeight(" + "" +
-					// map.item(ii).getNodeValue()+");");
+
 				} else if (key.equals("android:theme")) {
 					System.out.println("    " + layout_name + ".setTheme(" + value + ");");
 				} else if (key.equals("android:background")) {
 					if (value.startsWith("#")) {
 						System.out.println("    " + layout_name + ".setBackgroundColor(" + XmlUtil.getColorHex(value) + ");");
 					} else if (value.startsWith("@color/")) {
-
+						value = "R.color."+value.substring(7);
+						System.out.println("    " + layout_name + ".setBackgroundColor(getResources().getColor(" + value + "));");
 					} else if (value.startsWith("@drawable/")) {
+						value = "R.drawable."+value.substring(10);
+						System.out.println("    " + layout_name + ".setBackground(getResources().getDrawable(" + value + "));");
 
 					} else
 						System.out.println("    " + layout_name + ".setBackground(" + value + ");");
@@ -297,24 +452,49 @@ public class DomParser {
 					}
 					System.out.println("    " + layout_name + ".setOrientation(" + value + ");");
 				} else if (key.equals("android:src")) {
-					System.out.println("    " + layout_name + ".setImage(" + value + ");");
+					if(value.startsWith("@drawable/")){
+						value = "R.drawable."+value.substring(10);
+					}
+					else if(value.startsWith("@mipmap/")){
+						value = "R.mipmap."+value.substring(8);
+					}
+					System.out.println("    " + layout_name + ".setImageDrawable(getDrawable(" + value + "));");
 				} else if (key.equals("android:text")) {
 					if(value.startsWith("@string/")){
 						value = "R.string."+value.substring(8);
 					}
-					System.out.println("    " + layout_name + ".setText(\"" + value + "\");");
+					else{
+						value = "\""+value+"\"";
+					}
+					System.out.println("    " + layout_name + ".setText(" + value + ");");
 				} else if (key.equals("android:textColor")) {
 					if (value.startsWith("#")) {
 						System.out.println("    " + layout_name + ".setTextColor(" + XmlUtil.getColorHex(value) + ");");
 					} 
 					else if(value.startsWith("@color/")){
-						System.out.println("    " + layout_name + ".setTextColor(R.color." + value.substring(7) + ");");
+						System.out.println("    " + layout_name + ".setTextColor(getColor(R.color." + value.substring(7) + "));");
 					}
 					else
 						System.out.println("    " + layout_name + ".setTextColor(" + value + ");");
 				}
 				else if(key.equals("android:textSize")){
 					System.out.println("    "+layout_name+".setTextSize("+XmlUtil.getFontSize(value)+");");
+				}
+				else if(key.equals("android:ellipsize")){
+					String elipsize = value;
+					if(elipsize.equals("end")){
+						elipsize = "TextUtils.TruncateAt.END";
+					}
+					else if(elipsize.equals("start")){
+						elipsize = "TextUtils.TruncateAt.START";
+					}
+					else if(elipsize.equals("moddle")){
+						elipsize = "TextUtils.TruncateAt.MIDDLE";
+					}
+					else if(elipsize.equals("marquee")){
+						elipsize = "TextUtils.TruncateAt.MARQUEE";
+					}
+					System.out.println("    "+layout_name+".setEllipsize("+elipsize+");");
 				}
 				else if (key.equals("android:layout_weight")) {
 
@@ -414,6 +594,21 @@ public class DomParser {
 						gravity+="|Gravity.BOTTOM";
 					System.out.println("    " + layout_name+".setGravity("+gravity.substring(1)+");");
 				}
+				else if(key.equals("android:layout_gravity")){
+					String gravity = "";
+					if(value.indexOf("center")>=0)
+						gravity+="|Gravity.CENTER";
+					if(value.indexOf("left")>=0)
+						gravity+="|Gravity.LEFT";
+					if(value.indexOf("right")>=0)
+						gravity+="|Gravity.RIGHT";
+					if(value.indexOf("top")>=0)
+						gravity+="|Gravity.TOP";
+					if(value.indexOf("bottom")>=0)
+						gravity+="|Gravity.BOTTOM";
+					System.out.println("    " + element.getAttribute("layoutparams")+".gravity = "+gravity.substring(1)+";");
+
+				}
 				else if(key.equals("android:scrollbars")){
 					if(value.equals("vertical"))
 					{
@@ -428,6 +623,26 @@ public class DomParser {
 					{
 						System.out.println("    " + layout_name + ".setScrollBarStyle(view.SCROLLBARS_INSIDE_OVERLAY);");
 					}
+				}
+				else if(key.equals("android:minHeight")){
+					value = XmlUtil.getSize(value);
+					System.out.println("    "+layout_name+".setMinHeight("+value+");");
+				}
+				else if(key.equals("android:maxHeight")){
+					value = XmlUtil.getSize(value);
+					System.out.println("    "+layout_name+".setMaxHeight("+value+");");
+				}
+				else if(key.equals("android:minWidth")){
+					value = XmlUtil.getSize(value);
+					System.out.println("    "+layout_name+".setMinWidth("+value+");");
+				}
+				else if(key.equals("android:maxWidth")){
+					value = XmlUtil.getSize(value);
+					System.out.println("    "+layout_name+".setMaxWidth("+value+");");
+				}
+				else if(key.equals("android:elevation")){
+					value = XmlUtil.getSize(value);
+					System.out.println("    "+layout_name+".setElevation("+value+");");
 				}
 				else if(key.equals("android:shadowColor")){
 					String shadowDx = element.getAttribute("android:shadowDx");
@@ -491,66 +706,66 @@ public class DomParser {
 					System.out.println("    "+layout_name+".setColorFilter("+color+");");
 				}
 				else if(key.equals("android:paddingTop")){
-					String padding_top = element.getAttribute("android:paddingTop");
-					String padding_bottom = element.getAttribute("android:paddingBottom");
-					String padding_left = element.getAttribute("android:paddingLeft");
-					String padding_right = element.getAttribute("android:paddingRight");
-					element.removeAttribute("android:paddingTop");
-					element.removeAttribute("android:paddingBottom");
-					element.removeAttribute("android:paddingLeft");
-					element.removeAttribute("android:paddingRight");
-					padding_top = XmlUtil.getSize(padding_top);
-					padding_left = XmlUtil.getSize(padding_left);
-					padding_right = XmlUtil.getSize(padding_right);
-					padding_bottom = XmlUtil.getSize(padding_bottom);
-					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
+//					String padding_top = element.getAttribute("android:paddingTop");
+//					String padding_bottom = element.getAttribute("android:paddingBottom");
+//					String padding_left = element.getAttribute("android:paddingLeft");
+//					String padding_right = element.getAttribute("android:paddingRight");
+//					element.removeAttribute("android:paddingTop");
+//					element.removeAttribute("android:paddingBottom");
+//					element.removeAttribute("android:paddingLeft");
+//					element.removeAttribute("android:paddingRight");
+//					padding_top = XmlUtil.getSize(padding_top);
+//					padding_left = XmlUtil.getSize(padding_left);
+//					padding_right = XmlUtil.getSize(padding_right);
+//					padding_bottom = XmlUtil.getSize(padding_bottom);
+//					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
 				}
 				else if(key.equals("android:paddingBottom")){
-					String padding_top = element.getAttribute("android:paddingTop");
-					String padding_bottom = element.getAttribute("android:paddingBottom");
-					String padding_left = element.getAttribute("android:paddingLeft");
-					String padding_right = element.getAttribute("android:paddingRight");
-					element.removeAttribute("android:paddingTop");
-					element.removeAttribute("android:paddingBottom");
-					element.removeAttribute("android:paddingLeft");
-					element.removeAttribute("android:paddingRight");
-					padding_top = XmlUtil.getSize(padding_top);
-					padding_left = XmlUtil.getSize(padding_left);
-					padding_right = XmlUtil.getSize(padding_right);
-					padding_bottom = XmlUtil.getSize(padding_bottom);
-					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
+//					String padding_top = element.getAttribute("android:paddingTop");
+//					String padding_bottom = element.getAttribute("android:paddingBottom");
+//					String padding_left = element.getAttribute("android:paddingLeft");
+//					String padding_right = element.getAttribute("android:paddingRight");
+//					element.removeAttribute("android:paddingTop");
+//					element.removeAttribute("android:paddingBottom");
+//					element.removeAttribute("android:paddingLeft");
+//					element.removeAttribute("android:paddingRight");
+//					padding_top = XmlUtil.getSize(padding_top);
+//					padding_left = XmlUtil.getSize(padding_left);
+//					padding_right = XmlUtil.getSize(padding_right);
+//					padding_bottom = XmlUtil.getSize(padding_bottom);
+//					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
 			
 				}
 				else if(key.equals("android:paddingLeft")){
-					String padding_top = element.getAttribute("android:paddingTop");
-					String padding_bottom = element.getAttribute("android:paddingBottom");
-					String padding_left = element.getAttribute("android:paddingLeft");
-					String padding_right = element.getAttribute("android:paddingRight");
-					element.removeAttribute("android:paddingTop");
-					element.removeAttribute("android:paddingBottom");
-					element.removeAttribute("android:paddingLeft");
-					element.removeAttribute("android:paddingRight");
-					padding_top = XmlUtil.getSize(padding_top);
-					padding_left = XmlUtil.getSize(padding_left);
-					padding_right = XmlUtil.getSize(padding_right);
-					padding_bottom = XmlUtil.getSize(padding_bottom);
-					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
+//					String padding_top = element.getAttribute("android:paddingTop");
+//					String padding_bottom = element.getAttribute("android:paddingBottom");
+//					String padding_left = element.getAttribute("android:paddingLeft");
+//					String padding_right = element.getAttribute("android:paddingRight");
+//					element.removeAttribute("android:paddingTop");
+//					element.removeAttribute("android:paddingBottom");
+//					element.removeAttribute("android:paddingLeft");
+//					element.removeAttribute("android:paddingRight");
+//					padding_top = XmlUtil.getSize(padding_top);
+//					padding_left = XmlUtil.getSize(padding_left);
+//					padding_right = XmlUtil.getSize(padding_right);
+//					padding_bottom = XmlUtil.getSize(padding_bottom);
+//					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
 			
 				}
 				else if(key.equals("android:paddingRight")){
-					String padding_top = element.getAttribute("android:paddingTop");
-					String padding_bottom = element.getAttribute("android:paddingBottom");
-					String padding_left = element.getAttribute("android:paddingLeft");
-					String padding_right = element.getAttribute("android:paddingRight");
-					element.removeAttribute("android:paddingTop");
-					element.removeAttribute("android:paddingBottom");
-					element.removeAttribute("android:paddingLeft");
-					element.removeAttribute("android:paddingRight");
-					padding_top = XmlUtil.getSize(padding_top);
-					padding_left = XmlUtil.getSize(padding_left);
-					padding_right = XmlUtil.getSize(padding_right);
-					padding_bottom = XmlUtil.getSize(padding_bottom);
-					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
+//					String padding_top = element.getAttribute("android:paddingTop");
+//					String padding_bottom = element.getAttribute("android:paddingBottom");
+//					String padding_left = element.getAttribute("android:paddingLeft");
+//					String padding_right = element.getAttribute("android:paddingRight");
+//					element.removeAttribute("android:paddingTop");
+//					element.removeAttribute("android:paddingBottom");
+//					element.removeAttribute("android:paddingLeft");
+//					element.removeAttribute("android:paddingRight");
+//					padding_top = XmlUtil.getSize(padding_top);
+//					padding_left = XmlUtil.getSize(padding_left);
+//					padding_right = XmlUtil.getSize(padding_right);
+//					padding_bottom = XmlUtil.getSize(padding_bottom);
+//					System.out.println("    "+layout_name+".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
 			
 				}
 				else if(key.equals("android:padding")){
@@ -573,7 +788,7 @@ public class DomParser {
 					}
 					
 				}
-				else if(key.equals("visibility")){
+				else if(key.equals("android:visibility")){
 					
 				    if(value.equals("visible")){
 				    	System.out.println("    "+layout_name+".setVisibility(View.VISIBLE);");
@@ -621,6 +836,9 @@ public class DomParser {
 					}
 					System.out.println("    "+layout_name+".setImageDrawable(context.getDrawable("+value+"));");
 				}
+				else if(key.equals("name")){
+					
+				}
 				else if (key.equals("id")) {
 
 				} else if (key.equals("layoutparams")) {
@@ -644,7 +862,7 @@ public class DomParser {
 					System.out.println(""+layout_name+"."+key.substring(4)+" = "+value);
 				}
 				else
-					System.out.println("    " + element.getAttribute("id") + "." + map.item(ii).getNodeName() + " = "
+					System.out.println("    " + layout_name + "." + map.item(ii).getNodeName() + " = "
 							+ map.item(ii).getNodeValue() + ";");
 			}
 
@@ -654,13 +872,13 @@ public class DomParser {
 				// System.out.println("node item = " + nodeitem.getNodeName() +
 				// " value=" + nodeitem.getNodeValue() + " type="
 				// + nodeitem.getNodeType() + " ");
-				printAndroidCode(element.getNodeName(), element.getAttribute("id"), nodeitem);
+				printAndroidCode(element.getNodeName(), layout_name, nodeitem);
 			}
 		}
 
 		if (node.getNodeType() == 1) {
 			Element element1 = (Element) node;
-			System.out.println("    " + name + ".addView(" + element1.getAttribute("id") + ","
+			System.out.println("    " + name + ".addView(" + element1.getAttribute("name") + ","
 					+ element1.getAttribute("layoutparams") + ");");
 		}
 	}

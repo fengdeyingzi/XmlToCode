@@ -27,15 +27,15 @@ public class XmlUtil {
 					argb[0]=0xff;
 					if(c>='A'&&c<='F')
 					{
-						argb[i+1]=(c-'A'+10)*16;
+						argb[i+1]=(c-'A'+10)*16 + (c-'A'+10);
 					}
 					else if(c>='a'&&c<='f')
 					{
-						argb[i+1]=(c-'a'+10)*16;
+						argb[i+1]=(c-'a'+10)*16 + (c-'a'+10);
 					}
 					else if(c>='0'&&c<='9')
 					{
-						argb[i+1]=(c-'0')*16;
+						argb[i+1]=(c-'0')*16 + (c-'0');
 					}
 				}
 			}
@@ -80,15 +80,15 @@ public class XmlUtil {
 					char c=text.charAt(start+i);
 					if(c>='A'&&c<='Z')
 					{
-						argb[i]=((c-'A')+10)*16;
+						argb[i]=((c-'A')+10)*16 + ((c-'A')+10);
 					}
 					else if(c>='a'&&c<='z')
 					{
-						argb[i]=(c-'a'+10)*16;
+						argb[i]=(c-'a'+10)*16 + (c-'a'+10);
 					}
 					else if(c>='0'&&c<='9')
 					{
-						argb[i]=(c-'0')*16;
+						argb[i]=(c-'0')*16 + (c-'0');
 					}
 				}
 			}
@@ -155,7 +155,10 @@ public class XmlUtil {
 		//读取字号
 		public static String getFontSize(String text)
 		{
-			if(text.endsWith("dp")||text.endsWith("dip"))
+			if(text.startsWith("@dimen/")){
+				return "DisplayUtil.px2sp(context,getResources().getDimension(R.dimen."+text.substring(Str.strrchr(text, '/')+1)+"))";
+			}
+			else if(text.endsWith("dp")||text.endsWith("dip"))
 			{
 				return "DisplayUtil.dip2sp(context, Str.atoi(\""+text+"\"))";
 			}
@@ -170,6 +173,14 @@ public class XmlUtil {
 			return "Str.atoi(\""+text+"\")";
 		}
 		
+		//读取string
+		public static String getString(String text){
+			if(text.startsWith("@string/")){
+				return "R.string."+text.substring(Str.strrchr(text, '/')+1);
+			}
+			return text;
+		}
+		
 		//读取真或假
 		boolean getBoolean(String text)
 		{
@@ -179,5 +190,7 @@ public class XmlUtil {
 			}
 			return false;
 		}
+		
+		
 
 }
