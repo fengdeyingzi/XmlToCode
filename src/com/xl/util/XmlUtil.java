@@ -1,3 +1,4 @@
+package com.xl.util;
 import com.xl.game.math.Str;
 
 public class XmlUtil {
