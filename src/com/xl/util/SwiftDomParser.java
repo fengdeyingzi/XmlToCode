@@ -245,10 +245,49 @@ public class SwiftDomParser {
 				String className = root.getNodeName();
 				buf_code = new StringBuffer();
 				String swiftClassName = getLayoutName(className);
-				buf_code.append("    var "+layout_root+":"+swiftClassName + " = "+swiftClassName+"()\n");
 				if(className.equals("LinearLayout")){
+					String orientation = root.getAttribute("android:orientation");
+					if(orientation.equals("vertical")){
+						orientation = ".vert";
+					}
+					else if(orientation.equals("horizontal")){
+						orientation = ".horz";
+					}
+					else{
+						orientation = ".horz";
+					}
 					
+					buf_code.append("    var "+layout_root+":"+swiftClassName + " = "+swiftClassName+"("+orientation+")\n");
 				}
+				else
+					buf_code.append("    var "+layout_root+":"+swiftClassName + " = "+swiftClassName+"("+")\n");
+				
+				String layout_width = root.getAttribute("android:layout_width");
+				String layout_height = root.getAttribute("android:layout_height");
+				
+				
+				if (layout_width.equals("match_parent") || layout_width.equals("fill_parent")) {
+					layout_width = ".fill";
+				}
+				else if (layout_width.equals("wrap_content")) {
+					layout_width = ".wrap";
+				}
+				else {
+					layout_width = XmlUtil.getSize(layout_width);
+				}
+				
+				if (layout_height.equals("match_parent") || layout_height.equals("fill_parent")) {
+					layout_height = ".fill";
+				}
+				else if (layout_height.equals("wrap_content")) {
+					layout_height = ".wrap";
+				}
+				else {
+					layout_height = XmlUtil.getSize(layout_height);
+				}
+				buf_code.append("    "+layout_root+".tg_width ~= "+layout_width+"\n");
+				buf_code.append("    "+layout_root+".tg_height ~= "+layout_height+"\n");
+				
 				printiOSCode(className, layout_root, root);
 				return;
 			}
@@ -1042,9 +1081,9 @@ public class SwiftDomParser {
 							+ nodeName + "(" +")\n");
 				}
 				
-				buf_code.append("    " + layout_name + ".width = "+layout_width+"\n");
-				buf_code.append("    " + layout_name + ".height = "+layout_height+"\n");
-				buf_code.append("    " + layout_name + ".weight = "+layout_weight+"\n");
+				buf_code.append("    " + layout_name + ".tg_width ~= "+layout_width+"\n");
+				buf_code.append("    " + layout_name + ".tg_height ~= "+layout_height+"\n");
+//				buf_code.append("    " + layout_name + ".weight = "+layout_weight+"\n");
 				
 				
 				String margin = element.getAttribute("android:layout_margin");
@@ -1082,7 +1121,10 @@ public class SwiftDomParser {
 					padding_top = XmlUtil.getSize(padding_top);
 					padding_right = XmlUtil.getSize(padding_right);
 					padding_bottom = XmlUtil.getSize(padding_bottom);
-					buf_code.append("    "+layout_name+ ".padding = UIEdgeInsets(top:"+padding_top+", left:"+padding_left+", bottom:"+padding_bottom+", right:"+padding_right+");\n");
+					buf_code.append("    "+layout_name+".tg_top ~= "+padding_top+"\n");
+					buf_code.append("    "+layout_name+".tg_bottom ~= "+padding_bottom+"\n");
+					buf_code.append("    "+layout_name+".tg_left ~= "+padding_left+"\n");
+					buf_code.append("    "+layout_name+".tg_right ~= "+padding_right+"\n");
 		
 				}
 				
@@ -1252,74 +1294,70 @@ public class SwiftDomParser {
 					else if(key.equals("android:gravity")){
 						String gravity_hor = "";
 						String gravity_ver = "";
-						if(value.indexOf("left")>=0)
-							gravity_hor+="TGGravity.horz.left";
-						if(value.indexOf("right")>=0)
-							gravity_hor+="TGGravity.horz.right";
-						
-						
-						
-						
-						if(value.indexOf("top")>=0)
-							gravity_ver+="TGGravity.vert.top";
-						if(value.indexOf("bottom")>=0)
-							gravity_ver+="TGGravity.vert.bottom";
-						
-						if(value.indexOf("center")>=0){
-							if(gravity_hor.length()==0){
-								gravity_hor = "TGGravity.horz.center";
+						if(nodeName.equals("TextView")){
+							if(value.indexOf("left")>=0){
+								buf_code.append("    "+layout_name+".textAlignment = "+".left\n");
 							}
-							if(gravity_ver.length()==0){
-								gravity_ver = "TGGravity.vert.center";
+							if(value.indexOf("right")>=0){
+								buf_code.append("    "+layout_name+".textAlignment = "+".right\n");
+							}
+							
+							if(value.indexOf("top")>=0){
+								buf_code.append("    "+layout_name+".textAlignment = "+".top\n");
+							}
+							if(value.indexOf("bottom")>=0){
+								buf_code.append("    "+layout_name+".textAlignment = "+".bottom\n");
+							}
+							
+							if(value.indexOf("center")>=0){
+								buf_code.append("    "+layout_name+".textAlignment = "+".center\n");
 							}
 						}
+						else{
+							if(value.indexOf("center")>=0){
+								buf_code.append("    "+layout_name+".centerX ~= 0\n");
+								buf_code.append("    "+layout_name+".centerY ~= 0\n");
+							}
+							else{
+								buf_code.append(""+layout_name+".gravity = "+value+"\n");
+							}
+						}
 						
-						if(gravity_hor.length()==0){
-							gravity_hor = "TGGravity.horz.left";
-						}
-						if(gravity_ver.length()==0){
-							gravity_ver = "TGGravity.vert.top";
-						}
+						
+						
 							
 						
 						
-						buf_code.append("    " + layout_name+".tg_aligment = ["+gravity_hor+", "+gravity_ver+"]\n");
+						
 					}
 					else if(key.equals("android:layout_gravity")){
 						String gravity_hor = "";
 						String gravity_ver = "";
-						if(value.indexOf("left")>=0)
-							gravity_hor+="TGGravity.horz.left";
-						if(value.indexOf("right")>=0)
-							gravity_hor+="TGGravity.horz.right";
+						if(value.indexOf("left")>=0){
+							buf_code.append("    "+layout_name+".tg_left ~= 0\n");
+						}
+							
+						if(value.indexOf("right")>=0){
+							buf_code.append("    "+layout_name+".tg_right ~= 0\n");
+						}
 						
-						
-						
-						
-						if(value.indexOf("top")>=0)
-							gravity_ver+="TGGravity.vert.top";
-						if(value.indexOf("bottom")>=0)
-							gravity_ver+="TGGravity.vert.bottom";
+						if(value.indexOf("top")>=0){
+							buf_code.append("    "+layout_name+".tg_top ~= 0\n");
+						}
+						if(value.indexOf("bottom")>=0){
+							buf_code.append("    "+layout_name+".tg_bottom ~= 0\n");
+						}
 						
 						if(value.indexOf("center")>=0){
-							if(gravity_hor.length()==0){
-								gravity_hor = "TGGravity.horz.center";
-							}
-							if(gravity_ver.length()==0){
-								gravity_ver = "TGGravity.vert.center";
-							}
+							buf_code.append("    "+layout_name+".tg_centerX ~= 0\n");
+							buf_code.append("    "+layout_name+".tg_centerY ~= 0\n");
 						}
 						
-						if(gravity_hor.length()==0){
-							gravity_hor = "TGGravity.horz.left";
-						}
-						if(gravity_ver.length()==0){
-							gravity_ver = "TGGravity.vert.top";
-						}
+						
 							
 						
 						
-						buf_code.append("    " + layout_name+".tg_gravity = ["+gravity_hor+", "+gravity_ver+"]\n");
+						
 
 					}
 					else if(key.equals("android:scrollbars")){
@@ -1551,7 +1589,7 @@ public class SwiftDomParser {
 
 			if (node.getNodeType() == 1) {
 				Element element1 = (Element) node;
-				buf_code.append("    " + name + ".addSubView(" + element1.getAttribute("name") + ")\n");
+				buf_code.append("    " + name + ".addSubview(" + element1.getAttribute("name") + ")\n");
 			}
 		}
 

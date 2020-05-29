@@ -138,7 +138,10 @@ public class XmlUtil {
 		//读取长度信息
 		public static String getSize(String text)
 		{
-			if(text.endsWith("dp")||text.endsWith("dip"))
+			if(text.startsWith("@dimen/")){
+				return "getResources().getDimensionPixelSize(R.dimen."+text.substring(Str.strrchr(text, '/')+1)+")";
+			}
+			else if(text.endsWith("dp")||text.endsWith("dip"))
 			{
 				return "DisplayUtil.dip2px(context, Str.atoi(\""+text+"\"))";
 			}
@@ -180,6 +183,23 @@ public class XmlUtil {
 				return "R.string."+text.substring(Str.strrchr(text, '/')+1);
 			}
 			return text;
+		}
+		
+		//
+		public static String getDrawable(String value){
+			if(value.startsWith("@drawable/")){
+				value = "R.drawable."+value.substring(10);
+			}
+			else if(value.startsWith("@mipmap/")){
+				value = "R.mipmap."+value.substring(8);
+			}
+			else if(value.startsWith("@android:drawable/")){
+				value = "android.R.drawable."+value.substring(18);
+			}
+			else{
+				return value;
+			}
+			return value;
 		}
 		
 		//读取真或假

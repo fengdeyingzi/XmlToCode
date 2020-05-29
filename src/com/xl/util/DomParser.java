@@ -324,6 +324,20 @@ public class DomParser {
 		}
 	}
 	
+	//获取color
+	String getColor(String value){
+		if(value.startsWith("#")){
+			return XmlUtil.getColorHex(value);
+		}
+		else if(value.startsWith("@color/")){
+			return "R.color."+value.substring(7);
+		}
+		else if(value.startsWith("?attr/")){
+			return "ResouseUtil.getColorAttr(context, R.attr."+value.substring(6)+")";
+		}
+		return value;
+	}
+	
 	//获取theme名字
 	String getTheme(String value){
 		String temp = value;
@@ -413,9 +427,21 @@ public class DomParser {
 				buf_code.append("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
 				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");\n");
 			}
+			else if(className.equals("androidx.coordinatorlayout.widget.CoordinatorLayout")){
+				buf_code.append("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");\n");
+			}
+			else if(className.equals("com.google.android.material.appbar.AppBarLayout")){
+				buf_code.append("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");\n");
+			}
+			else if(className.equals("androidx.appcompat.widget.Toolbar")){
+				buf_code.append("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");\n");
+			}
 			else
-				buf_code.append("    ViewGroup.LayoutParams " + element.getAttribute("layoutparams")
-						+ " = new ViewGroup.LayoutParams(" + layout_width + "," + layout_height + ");\n");
+				buf_code.append("    ViewGroup.MarginLayoutParams " + element.getAttribute("layoutparams")
+						+ " = new ViewGroup.MarginLayoutParams(" + layout_width + "," + layout_height + ");\n");
 			if (layout_weight.length() != 0) {
 				buf_code.append("    " + element.getAttribute("layoutparams") + ".weight = "
 						+ element.getAttribute("android:layout_weight") + "f;\n");
@@ -436,7 +462,15 @@ public class DomParser {
 				margin_top = XmlUtil.getSize(margin_top);
 				margin_right = XmlUtil.getSize(margin_right);
 				margin_bottom = XmlUtil.getSize(margin_bottom);
+				if(className.equals("LinearLayout"))
 				buf_code.append("    "+layout_name+ ".setMargins("+margin_left+", "+margin_top+", "+margin_right+", "+margin_bottom+");\n");
+				else{
+					buf_code.append("    " + element.getAttribute("layoutparams") + ".topMargin = "+margin_top+";\n");
+					buf_code.append("    " + element.getAttribute("layoutparams") + ".bottomMargin = "+margin_bottom+";\n");
+					buf_code.append("    " + element.getAttribute("layoutparams") + ".leftMargin = "+margin_left+";\n");
+					buf_code.append("    " + element.getAttribute("layoutparams") + ".rightMargin = "+margin_right+";\n");
+					
+				}
 			}
 			
 			String padding = element.getAttribute("android:padding");
@@ -496,8 +530,20 @@ public class DomParser {
 					
 					buf_code.append("    " + layout_name + ".setTheme(" + getTheme(value) + ");\n");
 				} 
-				else if(key.equals("android:popupTheme")){
+				else if(key.equals("app:popupTheme")){
 					buf_code.append("    " + layout_name + ".setPopupTheme(" + getTheme(value) + ");\n");
+				}
+				else if(key.equals("app:title")){
+					buf_code.append("    " + layout_name + ".setTitle(" + XmlUtil.getString(value)+");");
+				}
+				else if(key.equals("app:subtitle")){
+					buf_code.append("    " + layout_name + ".setSubtitle(" + XmlUtil.getString(value)+");");
+				}
+				else if(key.equals("app:titleTextColor")){
+					buf_code.append("    " + layout_name + ".setTitleTextColor(" + XmlUtil.getColorHex(value) + ");");
+				}
+				else if(key.equals("app:subtitleTextColor")){
+					buf_code.append("    " + layout_name + ".setSubtitleTextColor(" + XmlUtil.getColorHex(value) + ");");
 				}
 				else if (key.equals("android:background")) {
 					if (value.startsWith("#")) {
@@ -509,7 +555,14 @@ public class DomParser {
 						value = "R.drawable."+value.substring(10);
 						buf_code.append("    " + layout_name + ".setBackground(getResources().getDrawable(" + value + "));\n");
 
-					} else
+					} 
+					else if(value.startsWith("@drawable/") || value.startsWith("@mipmap/")){
+						buf_code.append("    " + layout_name + ".setBackground(getResources().getDrawable(" + XmlUtil.getDrawable(value) + "));\n");
+					}
+					else if(value.startsWith("?attr/")){
+						buf_code.append("    " + layout_name + ".setBackgroundColor(" + getColor(value) + ");\n");
+					}
+					else
 						System.out.println("    " + layout_name + ".setBackground(" + value + ");");
 				} else if (key.equals("android:orientation")) {
 					if (value.equals("vertical")) {
@@ -518,14 +571,9 @@ public class DomParser {
 						value = "LinearLayout.HORIZONTAL";
 					}
 					buf_code.append("    " + layout_name + ".setOrientation(" + value + ");\n");
-				} else if (key.equals("android:src") || key.equals("android:srcCompat")) {
-					if(value.startsWith("@drawable/")){
-						value = "R.drawable."+value.substring(10);
-					}
-					else if(value.startsWith("@mipmap/")){
-						value = "R.mipmap."+value.substring(8);
-					}
-					buf_code.append("    " + layout_name + ".setImageDrawable(getDrawable(" + value + "));\n");
+				} else if (key.equals("android:src") || key.equals("app:srcCompat")) {
+					value = XmlUtil.getDrawable(value);
+					buf_code.append("    " + layout_name + ".setImageDrawable(getResources().getDrawable(" + value + "));\n");
 				} else if (key.equals("android:text")) {
 					if(value.startsWith("@string/")){
 						value = "R.string."+value.substring(8);
@@ -687,6 +735,10 @@ public class DomParser {
 						gravity+="|Gravity.TOP";
 					if(value.indexOf("bottom")>=0)
 						gravity+="|Gravity.BOTTOM";
+					if(value.indexOf("end")>=0)
+						gravity+="|Gravity.END";
+					if(value.indexOf("start")>=0)
+						gravity+="|Gravity.START";
 					buf_code.append("    " + element.getAttribute("layoutparams")+".gravity = "+gravity.substring(1)+";\n");
 
 				}
@@ -1127,15 +1179,11 @@ public class DomParser {
 						if(value.startsWith("@color/")){
 							System.out.println("    "+layout_name+".backgroundColor = UIColor."+value.substring(7));
 						}
+						
 					} else if (key.equals("android:orientation")) {
 						
 					} else if (key.equals("android:src")) {
-						if(value.startsWith("@drawable/")){
-							value = ""+value.substring(10);
-						}
-						else if(value.startsWith("@mipmap/")){
-							value = ""+value.substring(8);
-						}
+						value = XmlUtil.getDrawable(value);
 						System.out.println("    "+layout_name+".setImage(UIImage(named:\""+value+"\"),for: UIControl.State.normal)");
 
 					} else if (key.equals("android:text")) {
