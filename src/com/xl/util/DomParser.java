@@ -278,7 +278,7 @@ public class DomParser {
 				Element element = (Element) node;
 				String id = node.getNodeName();
 				if(id.indexOf('.')>0){
-					id = id.substring(Str.strrchr(id, '.'));
+					id = id.substring(Str.strrchr(id, '.')+1);
 				}
 				String view_name = id.toLowerCase() + "_" + count;
 				String key_id = element.getAttribute("android:id");
@@ -322,6 +322,41 @@ public class DomParser {
 			System.out.println("name = " + map.item(ii).getNodeName() + " value=" + map.item(ii).getNodeValue()
 					+ " type=" + map.item(ii).getNodeType());
 		}
+	}
+	
+	//获取theme名字
+	String getTheme(String value){
+		String temp = value;
+		StringBuffer buf = new StringBuffer();
+		if(value.startsWith("@style/")){
+			buf.append("R.style.");
+			temp = value.substring(7);
+			for(int i=0;i<temp.length();i++){
+				char c = temp.charAt(i);
+				if(c=='.'){
+					buf.append('_');
+				}
+				else{
+					buf.append(c);
+				}
+			}
+			return buf.toString();
+		}
+		else if(value.startsWith("@android:style/")){
+			buf.append("android.R.style.");
+			temp = value.substring(15);
+			for(int i=0;i<temp.length();i++){
+				char c = temp.charAt(i);
+				if(c=='.'){
+					buf.append('_');
+				}
+				else{
+					buf.append(c);
+				}
+			}
+			return buf.toString();
+		}
+		return value;
 	}
 
 // 输出android java代码
@@ -401,7 +436,7 @@ public class DomParser {
 				margin_top = XmlUtil.getSize(margin_top);
 				margin_right = XmlUtil.getSize(margin_right);
 				margin_bottom = XmlUtil.getSize(margin_bottom);
-				buf_code.append("    "+element.getAttribute("layoutparams")+ ".setMargins("+margin_left+", "+margin_top+", "+margin_right+", "+margin_bottom+");\n");
+				buf_code.append("    "+layout_name+ ".setMargins("+margin_left+", "+margin_top+", "+margin_right+", "+margin_bottom+");\n");
 			}
 			
 			String padding = element.getAttribute("android:padding");
@@ -438,6 +473,9 @@ public class DomParser {
 					
 
 				}
+				else if(key.indexOf("tools:")>=0){
+					
+				}
 				else if(key.equals("android:layout_margin")){
 				}
 				else if(key.equals("android:layout_marginTop")){
@@ -455,8 +493,13 @@ public class DomParser {
 				else if (key.equals("android:layout_height")) {
 
 				} else if (key.equals("android:theme")) {
-					buf_code.append("    " + layout_name + ".setTheme(" + value + ");\n");
-				} else if (key.equals("android:background")) {
+					
+					buf_code.append("    " + layout_name + ".setTheme(" + getTheme(value) + ");\n");
+				} 
+				else if(key.equals("android:popupTheme")){
+					buf_code.append("    " + layout_name + ".setPopupTheme(" + getTheme(value) + ");\n");
+				}
+				else if (key.equals("android:background")) {
 					if (value.startsWith("#")) {
 						buf_code.append("    " + layout_name + ".setBackgroundColor(" + XmlUtil.getColorHex(value) + ");\n");
 					} else if (value.startsWith("@color/")) {
@@ -475,7 +518,7 @@ public class DomParser {
 						value = "LinearLayout.HORIZONTAL";
 					}
 					buf_code.append("    " + layout_name + ".setOrientation(" + value + ");\n");
-				} else if (key.equals("android:src")) {
+				} else if (key.equals("android:src") || key.equals("android:srcCompat")) {
 					if(value.startsWith("@drawable/")){
 						value = "R.drawable."+value.substring(10);
 					}
