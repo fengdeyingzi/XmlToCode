@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 
 import com.xl.util.ClipBoard;
 import com.xl.util.DomParser;
+import com.xl.util.SwiftDomParser;
 
 
 public class XmlToCodeWindow extends JFrame{
@@ -95,6 +96,19 @@ public class XmlToCodeWindow extends JFrame{
 				DomParser parser = new DomParser();
 				parser.setXmlText(editArea.getText());
 				parser.parseJava();
+				TextWindow window = new TextWindow();
+				window.setText(parser.toString());
+				window.show();
+			}
+		});
+		
+		button_tokotlin.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Toast.makeText(XmlToCodeWindow.this, "暂未实现").display();;
+				System.out.println("暂未实现");
+				
 			}
 		});
 		
@@ -102,10 +116,21 @@ public class XmlToCodeWindow extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				DomParser parser = new DomParser();
+				SwiftDomParser parser = new SwiftDomParser();
 				parser.setXmlText(editArea.getText());
 				parser.parseSwift();
-				
+				TextWindow window = new TextWindow();
+				window.setText(parser.toString());
+				window.show();
+			}
+		});
+		
+		button_toflutter.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Toast.makeText(XmlToCodeWindow.this, "暂未实现").display();
+				System.out.println("暂未实现");
 			}
 		});
 
@@ -113,8 +138,32 @@ public class XmlToCodeWindow extends JFrame{
 		setSize(new Dimension(640, 480));
 		setLocation((screen_w-640)/2, (screen_h-480)/2);
 		textWindow.setLocation((screen_w-640)/2, (screen_h-480)/2);
-		setTitle("xml布局转代码v1.0 - 风的影子 - 2020/05/28");
+		setTitle("xml布局转代码v1.0 - 风的影子 - https://github.com/fengdeyingzi/XmlToCode");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		editArea.setText("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+				+"<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+				+"    android:orientation=\"vertical\" android:layout_width=\"match_parent\"\n"
+				+"    android:gravity=\"center\"\n"
+				+"    android:layout_height=\"match_parent\">\n"
+				+"\n"
+				+"    <TextView\n"
+				+"        android:layout_width=\"match_parent\"\n"
+				+"        android:layout_height=\"wrap_content\"\n"
+				+"        android:textSize=\"18sp\"\n"
+				+"        android:gravity=\"center\"\n"
+				+"        android:text=\"xml转代码\\nhttps://github.com/fengdeyingzi/XmlToCode\"\n"
+				+"        android:autoLink=\"web\"\n"
+				+"        android:padding=\"32dp\"\n"
+				+"        />\n"
+				+"    <TextView\n"
+				+"        android:id=\"@+id/text_author\"\n"
+				+"        android:layout_width=\"wrap_content\"\n"
+				+"        android:layout_height=\"wrap_content\"\n"
+				+"        android:textSize=\"16sp\"\n"
+				+"        android:text=\"风的影子 制作\"\n"
+				+"        />\n"
+				+"\n"
+				+"</LinearLayout>");
 		//setVisible(true);
 	}
 }

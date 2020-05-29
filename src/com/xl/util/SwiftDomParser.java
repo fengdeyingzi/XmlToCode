@@ -25,7 +25,7 @@ import com.xl.game.math.Str;
 
 
 
-public class DomParser {
+public class SwiftDomParser {
 
 	StringBuffer buf_code;
 
@@ -180,8 +180,8 @@ public class DomParser {
 
 
 
-	public DomParser(){
-		
+	public SwiftDomParser(){
+		buf_code = new StringBuffer();
 	}
 
 	public void setXmlText(String text){
@@ -210,11 +210,7 @@ public class DomParser {
 //				printfNodes(root);
 				String layout_root = "layout_root";
 				String className = root.getNodeName();
-				buf_code = new StringBuffer();
-				buf_code.append("    Context context = this;\n");
-				buf_code.append("    "+className+" "+layout_root+" = "+"new "+className+"(context);\n");
 				printAndroidCode(className, layout_root, root);
-				buf_code.append("    setContentView("+layout_root+");\n");
 				return;
 			}
 			
@@ -235,7 +231,7 @@ public class DomParser {
 		try {
 			// 惯例 取得document文件实例的过程
 			builder = factory.newDocumentBuilder();
-			inputStream = new ByteArrayInputStream(text.getBytes());
+			inputStream = new ByteArrayInputStream(text.getBytes("UTF-8"));
 			;// 以工程文件下assets文件夹为根目录
 			document = builder.parse(inputStream);
 
@@ -247,6 +243,12 @@ public class DomParser {
 //				printfNodes(root);
 				String layout_root = "layout_root";
 				String className = root.getNodeName();
+				buf_code = new StringBuffer();
+				String swiftClassName = getLayoutName(className);
+				buf_code.append("    var "+layout_root+":"+swiftClassName + " = "+swiftClassName+"()\n");
+				if(className.equals("LinearLayout")){
+					
+				}
 				printiOSCode(className, layout_root, root);
 				return;
 			}
@@ -332,8 +334,8 @@ public class DomParser {
 		if (node.getNodeType() == 1) {
 			// 输出代码
 			Element element = (Element) node;
-			buf_code.append("    " + element.getNodeName() + " " + element.getAttribute("name") + " = new "
-					+ element.getNodeName() + "(context);\n");
+			System.out.println("    " + element.getNodeName() + " " + element.getAttribute("name") + " = new "
+					+ element.getNodeName() + "(context);");
 			String layout_name = element.getAttribute("name");
 			//优先处理margin top layout_width layout_height layout_weight
 			String layout_width = element.getAttribute("android:layout_width");
@@ -359,31 +361,31 @@ public class DomParser {
 				layout_height = XmlUtil.getSize(layout_height);
 			}
 			if (className.equals("LinearLayout")) {
-				buf_code.append("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
-				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");\n");
+				System.out.println("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");");
 			}
 			else if(className.equals("FrameLayout")){
-				buf_code.append("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
-				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");\n");
+				System.out.println("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");");
 			}
 			else if(className.equals("TableLayout")){
-				buf_code.append("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
-				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");\n");
+				System.out.println("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");");
 			}
 			else if(className.equals("GridLayout")){
-				buf_code.append("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
-				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");\n");
+				System.out.println("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");");
 			}
 			else if(className.equals("RelativeLayout")){
-				buf_code.append("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
-				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");\n");
+				System.out.println("    "+className+".LayoutParams " + element.getAttribute("layoutparams")
+				+ " = new "+className+".LayoutParams(" + layout_width + "," + layout_height + ");");
 			}
 			else
-				buf_code.append("    ViewGroup.LayoutParams " + element.getAttribute("layoutparams")
-						+ " = new ViewGroup.LayoutParams(" + layout_width + "," + layout_height + ");\n");
+				System.out.println("    ViewGroup.LayoutParams " + element.getAttribute("layoutparams")
+						+ " = new ViewGroup.LayoutParams(" + layout_width + "," + layout_height + ");");
 			if (layout_weight.length() != 0) {
-				buf_code.append("    " + element.getAttribute("layoutparams") + ".weight = "
-						+ element.getAttribute("android:layout_weight") + "f;\n");
+				System.out.println("    " + element.getAttribute("layoutparams") + ".weight = "
+						+ element.getAttribute("android:layout_weight") + "f;");
 			}
 			String margin = element.getAttribute("android:layout_margin");
 			String margin_top = element.getAttribute("android:layout_marginTop");
@@ -401,7 +403,7 @@ public class DomParser {
 				margin_top = XmlUtil.getSize(margin_top);
 				margin_right = XmlUtil.getSize(margin_right);
 				margin_bottom = XmlUtil.getSize(margin_bottom);
-				buf_code.append("    "+element.getAttribute("layoutparams")+ ".setMargins("+margin_left+", "+margin_top+", "+margin_right+", "+margin_bottom+");\n");
+				System.out.println("    "+element.getAttribute("layoutparams")+ ".setMargins("+margin_left+", "+margin_top+", "+margin_right+", "+margin_bottom+");");
 			}
 			
 			String padding = element.getAttribute("android:padding");
@@ -420,7 +422,7 @@ public class DomParser {
 				padding_top = XmlUtil.getSize(padding_top);
 				padding_right = XmlUtil.getSize(padding_right);
 				padding_bottom = XmlUtil.getSize(padding_bottom);
-				buf_code.append("    "+layout_name+ ".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");\n");
+				System.out.println("    "+layout_name+ ".setPadding("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+");");
 	
 			}
 			
@@ -455,16 +457,16 @@ public class DomParser {
 				else if (key.equals("android:layout_height")) {
 
 				} else if (key.equals("android:theme")) {
-					buf_code.append("    " + layout_name + ".setTheme(" + value + ");\n");
+					System.out.println("    " + layout_name + ".setTheme(" + value + ");");
 				} else if (key.equals("android:background")) {
 					if (value.startsWith("#")) {
-						buf_code.append("    " + layout_name + ".setBackgroundColor(" + XmlUtil.getColorHex(value) + ");\n");
+						System.out.println("    " + layout_name + ".setBackgroundColor(" + XmlUtil.getColorHex(value) + ");");
 					} else if (value.startsWith("@color/")) {
 						value = "R.color."+value.substring(7);
-						buf_code.append("    " + layout_name + ".setBackgroundColor(getResources().getColor(" + value + "));\n");
+						System.out.println("    " + layout_name + ".setBackgroundColor(getResources().getColor(" + value + "));");
 					} else if (value.startsWith("@drawable/")) {
 						value = "R.drawable."+value.substring(10);
-						buf_code.append("    " + layout_name + ".setBackground(getResources().getDrawable(" + value + "));\n");
+						System.out.println("    " + layout_name + ".setBackground(getResources().getDrawable(" + value + "));");
 
 					} else
 						System.out.println("    " + layout_name + ".setBackground(" + value + ");");
@@ -474,7 +476,7 @@ public class DomParser {
 					} else if (value.equals("horizontal")) {
 						value = "LinearLayout.HORIZONTAL";
 					}
-					buf_code.append("    " + layout_name + ".setOrientation(" + value + ");\n");
+					System.out.println("    " + layout_name + ".setOrientation(" + value + ");");
 				} else if (key.equals("android:src")) {
 					if(value.startsWith("@drawable/")){
 						value = "R.drawable."+value.substring(10);
@@ -482,7 +484,7 @@ public class DomParser {
 					else if(value.startsWith("@mipmap/")){
 						value = "R.mipmap."+value.substring(8);
 					}
-					buf_code.append("    " + layout_name + ".setImageDrawable(getDrawable(" + value + "));\n");
+					System.out.println("    " + layout_name + ".setImageDrawable(getDrawable(" + value + "));");
 				} else if (key.equals("android:text")) {
 					if(value.startsWith("@string/")){
 						value = "R.string."+value.substring(8);
@@ -490,19 +492,19 @@ public class DomParser {
 					else{
 						value = "\""+value+"\"";
 					}
-					buf_code.append("    " + layout_name + ".setText(" + value + ");\n");
+					System.out.println("    " + layout_name + ".setText(" + value + ");");
 				} else if (key.equals("android:textColor")) {
 					if (value.startsWith("#")) {
-						buf_code.append("    " + layout_name + ".setTextColor(" + XmlUtil.getColorHex(value) + ");\n");
+						System.out.println("    " + layout_name + ".setTextColor(" + XmlUtil.getColorHex(value) + ");");
 					} 
 					else if(value.startsWith("@color/")){
-						buf_code.append("    " + layout_name + ".setTextColor(getColor(R.color." + value.substring(7) + "));\n");
+						System.out.println("    " + layout_name + ".setTextColor(getColor(R.color." + value.substring(7) + "));");
 					}
 					else
-						buf_code.append("    " + layout_name + ".setTextColor(" + value + ");\n");
+						System.out.println("    " + layout_name + ".setTextColor(" + value + ");");
 				}
 				else if(key.equals("android:textSize")){
-					buf_code.append("    "+layout_name+".setTextSize("+XmlUtil.getFontSize(value)+");\n");
+					System.out.println("    "+layout_name+".setTextSize("+XmlUtil.getFontSize(value)+");");
 				}
 				else if(key.equals("android:ellipsize")){
 					String elipsize = value;
@@ -518,25 +520,11 @@ public class DomParser {
 					else if(elipsize.equals("marquee")){
 						elipsize = "TextUtils.TruncateAt.MARQUEE";
 					}
-					buf_code.append("    "+layout_name+".setEllipsize("+elipsize+");\n");
+					System.out.println("    "+layout_name+".setEllipsize("+elipsize+");");
 				}
 				else if (key.equals("android:layout_weight")) {
 
 				} 
-				else if(key.equals("android:autoLink")){
-					if(value.equals("web")){
-						buf_code.append("    "+layout_name+".setAutoLinkMask("+"Linkify.WEB_URLS"+");\n");
-					}
-					else if(value.equals("phone")){ 
-						buf_code.append("    "+layout_name+".setAutoLinkMask("+"Linkify.PHONE_NUMBERS"+");\n");
-					}
-					else if(value.equals("map")){ 
-						buf_code.append("    "+layout_name+".setAutoLinkMask("+"Linkify.MAP_ADDRESSES"+");\n");
-					}
-					else if(value.equals("email")){ 
-						buf_code.append("    "+layout_name+".setAutoLinkMask("+"Linkify.EMAIL_ADDRESSES"+");\n");
-					}
-				}
 				//date|textUri|textShortMessage|textAutoCorrect|none|numberSigned|textVisiblePassword|textWebEditText|textMultiLine|textNoSuggestions|textCapSentences|
 				//textAutoComplete|textImeMultiLine|numberDecimal
 				else if (key.equals("android:inputType")) {
@@ -602,7 +590,7 @@ public class DomParser {
 					if(value.length()>0){
 						value = value.substring(1);
 					}
-					buf_code.append("    " + layout_name + ".setInputType(" + value + ");\n");
+					System.out.println("    " + layout_name + ".setInputType(" + value + ");");
 				} else if (key.equals("android:typeface")) {
 					if (value.equals("monospace")) {
 						value = "Typeface.MONOSPACE";
@@ -630,7 +618,7 @@ public class DomParser {
 						gravity+="|Gravity.TOP";
 					if(value.indexOf("bottom")>=0)
 						gravity+="|Gravity.BOTTOM";
-					buf_code.append("    " + layout_name+".setGravity("+gravity.substring(1)+");\n");
+					System.out.println("    " + layout_name+".setGravity("+gravity.substring(1)+");");
 				}
 				else if(key.equals("android:layout_gravity")){
 					String gravity = "";
@@ -644,43 +632,43 @@ public class DomParser {
 						gravity+="|Gravity.TOP";
 					if(value.indexOf("bottom")>=0)
 						gravity+="|Gravity.BOTTOM";
-					buf_code.append("    " + element.getAttribute("layoutparams")+".gravity = "+gravity.substring(1)+";\n");
+					System.out.println("    " + element.getAttribute("layoutparams")+".gravity = "+gravity.substring(1)+";");
 
 				}
 				else if(key.equals("android:scrollbars")){
 					if(value.equals("vertical"))
 					{
-						buf_code.append("    " + layout_name+".setVerticalScrollBarEnabled(true);\n");
-						buf_code.append("    "+layout_name + ".setScrollBarStyle(View.SCROLLBARS_OUTSIDE_INSET);\n");
+						System.out.println("    " + layout_name+".setVerticalScrollBarEnabled(true);");
+						System.out.println("    "+layout_name + ".setScrollBarStyle(View.SCROLLBARS_OUTSIDE_INSET);");
 					}
 					else if(value.equals("none"))
 					{
-						buf_code.append("    "+ layout_name + ".setVerticalScrollBarEnabled(false);\n");
+						System.out.println("    "+ layout_name + ".setVerticalScrollBarEnabled(false);");
 					}
 					else
 					{
-						buf_code.append("    " + layout_name + ".setScrollBarStyle(view.SCROLLBARS_INSIDE_OVERLAY);\n");
+						System.out.println("    " + layout_name + ".setScrollBarStyle(view.SCROLLBARS_INSIDE_OVERLAY);");
 					}
 				}
 				else if(key.equals("android:minHeight")){
 					value = XmlUtil.getSize(value);
-					buf_code.append("    "+layout_name+".setMinHeight("+value+");\n");
+					System.out.println("    "+layout_name+".setMinHeight("+value+");");
 				}
 				else if(key.equals("android:maxHeight")){
 					value = XmlUtil.getSize(value);
-					buf_code.append("    "+layout_name+".setMaxHeight("+value+");\n");
+					System.out.println("    "+layout_name+".setMaxHeight("+value+");");
 				}
 				else if(key.equals("android:minWidth")){
 					value = XmlUtil.getSize(value);
-					buf_code.append("    "+layout_name+".setMinWidth("+value+");\n");
+					System.out.println("    "+layout_name+".setMinWidth("+value+");");
 				}
 				else if(key.equals("android:maxWidth")){
 					value = XmlUtil.getSize(value);
-					buf_code.append("    "+layout_name+".setMaxWidth("+value+");\n");
+					System.out.println("    "+layout_name+".setMaxWidth("+value+");");
 				}
 				else if(key.equals("android:elevation")){
 					value = XmlUtil.getSize(value);
-					buf_code.append("    "+layout_name+".setElevation("+value+");\n");
+					System.out.println("    "+layout_name+".setElevation("+value+");");
 				}
 				else if(key.equals("android:shadowColor")){
 					String shadowDx = element.getAttribute("android:shadowDx");
@@ -692,44 +680,44 @@ public class DomParser {
 					else if(shadowColor.startsWith("@color/")){
 						shadowColor = "R.color."+shadowColor.substring(7);
 					}
-					buf_code.append("    "+layout_name+".setShadowLayer("+0+", "+XmlUtil.getSize(shadowDx)+", "+XmlUtil.getSize(shadowDy)+", "+shadowColor+");\n");
+					System.out.println("    "+layout_name+".setShadowLayer("+0+", "+XmlUtil.getSize(shadowDx)+", "+XmlUtil.getSize(shadowDy)+", "+shadowColor+");");
 				}
 				else if(key.endsWith("android:scaleType")){
 					if(value.equals("matrix"))
 					{
-						buf_code.append("    "+layout_name+".setScaleType(ImageView.ScaleType.MATRIX);\n");
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.MATRIX);");
 					}
 					else if(value.equals("fitXY"))
 					{
-						buf_code.append("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_XY);\n");
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_XY);");
 					}
 					else if(value.equals("fitStart"))
 					{
-						buf_code.append("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_START);\n");
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_START);");
 						
 					}
 					else if(value.equals("fitCenter"))
 					{
-						buf_code.append("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_CENTER);\n");
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_CENTER);");
 						
 					}
 					else if(value.equals("fitEnd"))
 					{
-						buf_code.append("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_END);\n");
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.FIT_END);");
 						
 					}else if(value.equals("center"))
 					{
-						buf_code.append("    "+layout_name+".setScaleType(ImageView.ScaleType.CENTER);\n");
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.CENTER);");
 						
 					}
 					else if(value.equals("centerCrop"))
 					{
-						buf_code.append("    "+layout_name+".setScaleType(ImageView.ScaleType.CENTER_CROP);\n");
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.CENTER_CROP);");
 						
 					}
 					else if(value.equals("centerInside"))
 					{
-						buf_code.append("    "+layout_name+".setScaleType(ImageView.ScaleType.CENTER_INSIDE);\n");
+						System.out.println("    "+layout_name+".setScaleType(ImageView.ScaleType.CENTER_INSIDE);");
 						
 					}
 				}
@@ -741,7 +729,7 @@ public class DomParser {
 					else if(color.startsWith("@color/")){
 						color = "R.color."+color.substring(7);
 					}
-					buf_code.append("    "+layout_name+".setColorFilter("+color+");\n");
+					System.out.println("    "+layout_name+".setColorFilter("+color+");");
 				}
 				else if(key.equals("android:paddingTop")){
 //					String padding_top = element.getAttribute("android:paddingTop");
@@ -807,63 +795,63 @@ public class DomParser {
 			
 				}
 				else if(key.equals("android:padding")){
-//					buf_code.append("    "+layout_name+".setPadding("+value+", "+value+", "+value+", "+value+");\n");
+					System.out.println("    "+layout_name+".setPadding("+value+", "+value+", "+value+", "+value+");");
 				}
 				else if(key.equals("android:alpha")){
-					buf_code.append("    "+layout_name+".setAlpha("+value+");\n");
+					System.out.println("    "+layout_name+".setAlpha("+value+");");
 				}
 				else if(key.equals("android:textStyle")){
 					if(value.equals("bold"))
 					{
-						buf_code.append("    "+layout_name+".setTypeface("+layout_name+".getTypeface(), Typeface.BOLD);\n" );
+						System.out.println("    "+layout_name+".setTypeface("+layout_name+".getTypeface(), Typeface.BOLD);" );
 					}
 					if(value.equals("italic"))
 					{
-						buf_code.append("    "+layout_name+".setTypeface("+layout_name+".getTypeface(), Typeface.ITALIC);\n" );
+						System.out.println("    "+layout_name+".setTypeface("+layout_name+".getTypeface(), Typeface.ITALIC);" );
 					}
 					if(value.equals("bold_italic")){
-						buf_code.append("    "+layout_name+".setTypeface("+layout_name+".getTypeface(), Typeface.BOLD_ITALIC);\n" );
+						System.out.println("    "+layout_name+".setTypeface("+layout_name+".getTypeface(), Typeface.BOLD_ITALIC);" );
 					}
 					
 				}
 				else if(key.equals("android:visibility")){
 					
 				    if(value.equals("visible")){
-				    	buf_code.append("    "+layout_name+".setVisibility(View.VISIBLE);\n");
+				    	System.out.println("    "+layout_name+".setVisibility(View.VISIBLE);");
 				    }
 							
 					else if(value.equals("invisible")){
-						buf_code.append("    "+layout_name+".setVisibility(View.INVISIBLE);\n");
+						System.out.println("    "+layout_name+".setVisibility(View.INVISIBLE);");
 					}
 							
 					else if(value.equals("gone")){
-						buf_code.append("    "+layout_name+".setVisibility(View.GONE);\n");
+						System.out.println("    "+layout_name+".setVisibility(View.GONE);");
 					}
 							
 					
 				}
 				else if(key.equals("android:singleLine")){
-					buf_code.append("    "+layout_name+".setSingleLine("+value+");\n");
+					System.out.println("    "+layout_name+".setSingleLine("+value+");");
 				}
 				else if(key.equals("android:ems")){
-					buf_code.append("    "+layout_name+".setEms("+XmlUtil.getSize(value)+");\n");
+					System.out.println("    "+layout_name+".setEms("+XmlUtil.getSize(value)+");");
 				}
 				else if(key.equals("android:lines"))
 				{
-					buf_code.append("    "+layout_name+".setLines("+value+");\n");
+					System.out.println("    "+layout_name+".setLines("+value+");");
 				}
 				else if(key.equals("android:minLines")){
-					buf_code.append("    "+layout_name+".setMinLines("+value+");\n");
+					System.out.println("    "+layout_name+".setMinLines("+value+");");
 				}
 				else if(key.equals("android:maxLines")){
-					buf_code.append("    "+layout_name+".setMaxLines("+value+");\n");
+					System.out.println("    "+layout_name+".setMaxLines("+value+");");
 				}
 				else if(key.equals("android:hint"))
 				{
 					if(value.startsWith("@string/")){
 						value = "R.string."+value.substring(8);
 					}
-					buf_code.append("    "+layout_name+".setHint(\""+value+"\");\n");
+					System.out.println("    "+layout_name+".setHint(\""+value+"\");");
 				}
 				else if(key.equals("android:drawable")){
 					if(value.startsWith("@drawable/")){
@@ -872,7 +860,7 @@ public class DomParser {
 					else if(value.startsWith("@mipmap/")){
 						value = "R.mipmap."+value.substring(8);
 					}
-					buf_code.append("    "+layout_name+".setImageDrawable(context.getDrawable("+value+"));\n");
+					System.out.println("    "+layout_name+".setImageDrawable(context.getDrawable("+value+"));");
 				}
 				else if(key.equals("name")){
 					
@@ -889,19 +877,19 @@ public class DomParser {
 
 				} else if (key.equals("android:id")) {
 					if (value.startsWith("@+id/") || value.startsWith("@id/")) {
-						buf_code.append(
-								"    " + layout_name + ".setId(R.id." + value.substring(value.indexOf("/") + 1) + ");\n");
+						System.out.println(
+								"    " + layout_name + ".setId(R.id." + value.substring(value.indexOf("/") + 1) + ");");
 					} else
-						buf_code.append("    " + layout_name + ".setId(" + value + ");\n");
+						System.out.println("    " + layout_name + ".setId(" + value + ");");
 				} else if (key.startsWith("android:")) {
-					buf_code.append(""+layout_name+"."+key.substring(8)+" = "+value+"\n");
+					System.out.println(""+layout_name+"."+key.substring(8)+" = "+value);
 				} 
 				else if(key.startsWith("app:")){
-					buf_code.append(""+layout_name+"."+key.substring(4)+" = "+value+"\n");
+					System.out.println(""+layout_name+"."+key.substring(4)+" = "+value);
 				}
 				else
-					buf_code.append("    " + layout_name + "." + map.item(ii).getNodeName() + " = "
-							+ map.item(ii).getNodeValue() + ";\n");
+					System.out.println("    " + layout_name + "." + map.item(ii).getNodeName() + " = "
+							+ map.item(ii).getNodeValue() + ";");
 			}
 
 			for (int n = 0; n < nodelist.getLength(); n++) {
@@ -916,11 +904,56 @@ public class DomParser {
 
 		if (node.getNodeType() == 1) {
 			Element element1 = (Element) node;
-			buf_code.append("    " + name + ".addView(" + element1.getAttribute("name") + ","
-					+ element1.getAttribute("layoutparams") + ");\n");
+			System.out.println("    " + name + ".addView(" + element1.getAttribute("name") + ","
+					+ element1.getAttribute("layoutparams") + ");");
 		}
 	}
 	
+	//通过标签获取swift类名
+	String getLayoutName(String nodeName){
+		if(nodeName.equals("LinearLayout")){
+			return "TGLinearLayout";
+		}
+		else if(nodeName.equals("FrameLayout")){
+			return "TGFrameLayout";
+		}
+		else if(nodeName.equals("TextView")){
+			return "UILabel";
+		}
+		else if(nodeName.equals("Button")){
+			return "UIButton";
+		}
+		else if(nodeName.equals("ImageView")){
+			return "UIImageView";
+		}
+		else if(nodeName.equals("EditText")){
+			return "UITextField";
+		}
+		else if(nodeName.equals("RelativeLayout")){
+			return "TGRelativeLayout";
+		}
+		else if(nodeName.equals("TableLayout")){
+			return "TGTableLayout";
+		}
+		else if(nodeName.equals("ListView")){
+			return "UITableView";
+		}
+		else if(nodeName.equals("View")){
+			return "UIView";
+		}
+		else if(nodeName.equals("ScrollView")){
+			return "UIScrollView";
+		}
+		else if(nodeName.equals("HorizontalScrollView")){
+			return "UIScrollView";
+		}
+		else {
+			if(nodeName.indexOf('.')>0){
+				return nodeName.substring(Str.strrchr(nodeName, '.')+1);
+			}
+			return nodeName; 
+		}
+	}
 	
 	// 输出 ios swift 代码
 		void printiOSCode(String className, String name, Node node) {
@@ -981,36 +1014,37 @@ public class DomParser {
 
 				//创建layout
 				if(nodeName.equals("LinearLayout")){
-					System.out.println("    var " + layout_name + ":" + "TGLinearLayout" + " = "
-						+ "TGLinearLayout" + "(" + orientation+")");
+					buf_code.append("    var " + layout_name + ":" + "TGLinearLayout" + " = "
+						+ "TGLinearLayout" + "(" + orientation+")\n");
 				}
 				else if(nodeName.equals("FrameLayout")){
-					System.out.println("    var " + layout_name + ":" + "TGFrameLayout" + " = "
-							+ "TGFrameLayout" + "(" + orientation+")");
+					buf_code.append("    var " + layout_name + ":" + "TGFrameLayout" + " = "
+							+ "TGFrameLayout" + "(" + orientation+")\n");
 				}
 				else if(nodeName.equals("TextView")){
-					System.out.println("    var " + layout_name + ":" + "UITextView" + " = "
-							+ "UITextView" + "(" +")");
+					buf_code.append("    var " + layout_name + ":" + "UITextView" + " = "
+							+ "UITextView" + "(" +")\n");
 				}
 				else if(nodeName.equals("Button")){
-					System.out.println("    var " + layout_name + ":" + "UIButton" + " = "
-							+ "UIButton" + "(" +")");
+					buf_code.append("    var " + layout_name + ":" + "UIButton" + " = "
+							+ "UIButton" + "(" +")\n");
 				}
 				else if(nodeName.equals("ImageView")){
-					System.out.println("    var " + layout_name + ":" + "UIImageView" + " = "
-							+ "UIImageView" + "(" +")");
+					buf_code.append("    var " + layout_name + ":" + "UIImageView" + " = "
+							+ "UIImageView" + "(" +")\n");
 				}
 				else if(nodeName.equals("EditText")){
-					System.out.println("    var " + layout_name + ":" + "UITextField" + " = "
-							+ "UITextField" + "(" +")");
+					buf_code.append("    var " + layout_name + ":" + "UITextField" + " = "
+							+ "UITextField" + "(" +")\n");
 				}
 				else {
-					System.out.println("    var " + layout_name + ":" + nodeName + " = "
-							+ nodeName + "(" +")");
+					buf_code.append("    var " + layout_name + ":" + nodeName + " = "
+							+ nodeName + "(" +")\n");
 				}
 				
-				System.out.println("    " + layout_name + ".width = "+layout_width);
-				System.out.println("    " + layout_name + ".height = "+layout_height);
+				buf_code.append("    " + layout_name + ".width = "+layout_width+"\n");
+				buf_code.append("    " + layout_name + ".height = "+layout_height+"\n");
+				buf_code.append("    " + layout_name + ".weight = "+layout_weight+"\n");
 				
 				
 				String margin = element.getAttribute("android:layout_margin");
@@ -1029,7 +1063,7 @@ public class DomParser {
 					margin_top = XmlUtil.getSize(margin_top);
 					margin_right = XmlUtil.getSize(margin_right);
 					margin_bottom = XmlUtil.getSize(margin_bottom);
-					System.out.println("    "+layout_name+ ".margin = UIEdgeInsets(top:"+margin_top+", left:"+margin_left+", bottom:"+margin_bottom+", right:"+margin_right+");");
+					buf_code.append("    "+layout_name+ ".margin = UIEdgeInsets(top:"+margin_top+", left:"+margin_left+", bottom:"+margin_bottom+", right:"+margin_right+");\n");
 				}
 				
 				String padding = element.getAttribute("android:padding");
@@ -1048,7 +1082,7 @@ public class DomParser {
 					padding_top = XmlUtil.getSize(padding_top);
 					padding_right = XmlUtil.getSize(padding_right);
 					padding_bottom = XmlUtil.getSize(padding_bottom);
-					System.out.println("    "+layout_name+ ".padding = UIEdgeInsets(top:"+padding_top+", left:"+padding_left+", bottom:"+padding_bottom+", right:"+padding_right+");");
+					buf_code.append("    "+layout_name+ ".padding = UIEdgeInsets(top:"+padding_top+", left:"+padding_left+", bottom:"+padding_bottom+", right:"+padding_right+");\n");
 		
 				}
 				
@@ -1082,7 +1116,7 @@ public class DomParser {
 						
 					} else if (key.equals("android:background")) {
 						if(value.startsWith("@color/")){
-							System.out.println("    "+layout_name+".backgroundColor = UIColor."+value.substring(7));
+							buf_code.append("    "+layout_name+".backgroundColor = UIColor."+value.substring(7)+"\n");
 						}
 					} else if (key.equals("android:orientation")) {
 						
@@ -1093,27 +1127,27 @@ public class DomParser {
 						else if(value.startsWith("@mipmap/")){
 							value = ""+value.substring(8);
 						}
-						System.out.println("    "+layout_name+".setImage(UIImage(named:\""+value+"\"),for: UIControl.State.normal)");
+						buf_code.append("    "+layout_name+".setImage(UIImage(named:\""+value+"\"),for: UIControl.State.normal)\n");
 
 					} else if (key.equals("android:text")) {
 						if(value.startsWith("@string/")){
-							System.out.println("    "+layout_name+".text = "+value.substring(8));
+							buf_code.append("    "+layout_name+".text = "+value.substring(8)+"\n");
 						}
 						else{
-							System.out.println("    "+layout_name+".text = \""+value+"\"");
+							buf_code.append("    "+layout_name+".text = \""+value+"\"\n");
 						}
 					} else if (key.equals("android:textColor")) {
 						if (value.startsWith("#")) {
-							System.out.println("    " + layout_name + ".textColor = " + XmlUtil.getColorHex(value) + "");
+							buf_code.append("    " + layout_name + ".textColor = " + XmlUtil.getColorHex(value) + "\n");
 						} 
 						else if(value.startsWith("@color/")){
-							System.out.println("    " + layout_name + ".textColor = " + value.substring(7) + "");
+							buf_code.append("    " + layout_name + ".textColor = " + value.substring(7) + "\n");
 						}
 						else
-							System.out.println("    " + layout_name + ".textColor = " + value + "");
+							buf_code.append("    " + layout_name + ".textColor = " + value + "\n");
 					}
 					else if(key.equals("android:textSize")){
-						System.out.println("    "+layout_name+".font = UIFont.systemFont(ofSize: "+value+")");
+						buf_code.append("    "+layout_name+".font = UIFont.systemFont(ofSize: "+value+")\n");
 					}
 					else if(key.equals("android:ellipsize")){
 						String elipsize = value;
@@ -1129,7 +1163,7 @@ public class DomParser {
 						else if(elipsize.equals("marquee")){
 							elipsize = "MSLineBreakMode.byWordWrapping";
 						}
-						System.out.println("    "+layout_name+".lineBreakMode = "+elipsize+"");
+						buf_code.append("    "+layout_name+".lineBreakMode = "+elipsize+"\n");
 					}
 					else if (key.equals("android:layout_weight")) {
 
@@ -1249,7 +1283,7 @@ public class DomParser {
 							
 						
 						
-						System.out.println("    " + layout_name+".tg_aligment = ["+gravity_hor+", "+gravity_ver+"]");
+						buf_code.append("    " + layout_name+".tg_aligment = ["+gravity_hor+", "+gravity_ver+"]\n");
 					}
 					else if(key.equals("android:layout_gravity")){
 						String gravity_hor = "";
@@ -1285,7 +1319,7 @@ public class DomParser {
 							
 						
 						
-						System.out.println("    " + layout_name+".tg_gravity = ["+gravity_hor+", "+gravity_ver+"]");
+						buf_code.append("    " + layout_name+".tg_gravity = ["+gravity_hor+", "+gravity_ver+"]\n");
 
 					}
 					else if(key.equals("android:scrollbars")){
@@ -1305,19 +1339,19 @@ public class DomParser {
 					}
 					else if(key.equals("android:minHeight")){
 						value = XmlUtil.getSize(value);
-						System.out.println("    "+layout_name+".tg_top.min("+value+");");
+						buf_code.append("    "+layout_name+".tg_top.min("+value+");\n");
 					}
 					else if(key.equals("android:maxHeight")){
 						value = XmlUtil.getSize(value);
-						System.out.println("    "+layout_name+".tg_top.max("+value+");");
+						buf_code.append("    "+layout_name+".tg_top.max("+value+");\n");
 					}
 					else if(key.equals("android:minWidth")){
 						value = XmlUtil.getSize(value);
-						System.out.println("    "+layout_name+".tg_top.min("+value+");");
+						buf_code.append("    "+layout_name+".tg_top.min("+value+");\n");
 					}
 					else if(key.equals("android:maxWidth")){
 						value = XmlUtil.getSize(value);
-						System.out.println("    "+layout_name+".tg_left.max("+value+");");
+						buf_code.append("    "+layout_name+".tg_left.max("+value+");\n");
 					}
 					else if(key.equals("android:elevation")){
 //						value = XmlUtil.getSize(value);
@@ -1333,45 +1367,45 @@ public class DomParser {
 						else if(shadowColor.startsWith("@color/")){
 							shadowColor = "R.color."+shadowColor.substring(7);
 						}
-						System.out.println("    "+layout_name+".layer.shadowColor = "+shadowColor+"");
-						System.out.println("    "+layout_name+".layer.shadowOffset = "+"CGSize(width:"+shadowDx+", height:"+shadowDy+")");
+						buf_code.append("    "+layout_name+".layer.shadowColor = "+shadowColor+"\n");
+						buf_code.append("    "+layout_name+".layer.shadowOffset = "+"CGSize(width:"+shadowDx+", height:"+shadowDy+")\n");
 					}
 					else if(key.endsWith("android:scaleType")){
 						if(value.equals("matrix"))
 						{
-							System.out.println("    "+layout_name+".contentMode = UIView.ContentMode.center");
+							buf_code.append("    "+layout_name+".contentMode = UIView.ContentMode.center\n");
 						}
 						else if(value.equals("fitXY"))
 						{
-							System.out.println("    "+layout_name+".contentMode = UIView.ContentMode.scaleAspectFill");
+							buf_code.append("    "+layout_name+".contentMode = UIView.ContentMode.scaleAspectFill\n");
 						}
 						else if(value.equals("fitStart"))
 						{
-							System.out.println("    "+layout_name+".contentMode = UIView.ContentMode.scaleAspectFill");
+							buf_code.append("    "+layout_name+".contentMode = UIView.ContentMode.scaleAspectFill\n");
 							
 						}
 						else if(value.equals("fitCenter"))
 						{
-							System.out.println("    "+layout_name+".contentMode = UIView.ContentMode.center");
+							buf_code.append("    "+layout_name+".contentMode = UIView.ContentMode.center\n");
 							
 						}
 						else if(value.equals("fitEnd"))
 						{
-							System.out.println("    "+layout_name+".contentMode = UIView.ContentMode.center");
+							buf_code.append("    "+layout_name+".contentMode = UIView.ContentMode.center\n");
 							
 						}else if(value.equals("center"))
 						{
-							System.out.println("    "+layout_name+".contentMode = UIView.ContentMode.center");
+							buf_code.append("    "+layout_name+".contentMode = UIView.ContentMode.center\n");
 							
 						}
 						else if(value.equals("centerCrop"))
 						{
-							System.out.println("    "+layout_name+".contentMode = UIView.ContentMode.center");
+							buf_code.append("    "+layout_name+".contentMode = UIView.ContentMode.center\n");
 							
 						}
 						else if(value.equals("centerInside"))
 						{
-							System.out.println("    "+layout_name+".contentMode = UIView.ContentMode.center");
+							buf_code.append("    "+layout_name+".contentMode = UIView.ContentMode.center\n");
 							
 						}
 					}
@@ -1383,7 +1417,7 @@ public class DomParser {
 						else if(color.startsWith("@color/")){
 							color = "R.color."+color.substring(7);
 						}
-						System.out.println("    "+layout_name+".tintColor = "+color+"");
+						buf_code.append("    "+layout_name+".tintColor = "+color+"\n");
 					}
 					else if(key.equals("android:paddingTop")){
 
@@ -1403,7 +1437,7 @@ public class DomParser {
 						
 					}
 					else if(key.equals("android:alpha")){
-						System.out.println("    "+layout_name+".layer.alpha = "+value+"f");
+						buf_code.append("    "+layout_name+".layer.alpha = "+value+"f\n");
 					}
 					else if(key.equals("android:textStyle")){
 //						if(value.equals("bold"))
@@ -1422,26 +1456,26 @@ public class DomParser {
 					else if(key.equals("android:visibility")){
 						
 					    if(value.equals("visible")){
-					    	System.out.println("    "+layout_name+".hidden = false");
+					    	buf_code.append("    "+layout_name+".hidden = false\n");
 					    }
 								
 						else if(value.equals("invisible")){
-							System.out.println("    "+layout_name+".hidden = true");
+							buf_code.append("    "+layout_name+".hidden = true\n");
 						}
 								
 						else if(value.equals("gone")){
-							System.out.println("    "+layout_name+".hidden = true");
+							buf_code.append("    "+layout_name+".hidden = true\n");
 						}
 //								
 						
 					}
 					else if(key.equals("android:singleLine")){
 						if(value == "true"){
-							System.out.println("    "+layout_name+".numberOfLines = 1");
+							buf_code.append("    "+layout_name+".numberOfLines = 1\n");
 						}
 						else{
-							System.out.println("    "+layout_name+".lineBreakMode = NSLineBreakMode.ByWordWrapping");
-							System.out.println("    "+layout_name+".numberOfLines = 0");
+							buf_code.append("    "+layout_name+".lineBreakMode = NSLineBreakMode.ByWordWrapping\n");
+							buf_code.append("    "+layout_name+".numberOfLines = 0\n");
 						}
 //						System.out.println("    "+layout_name+".setSingleLine("+value+");");
 					}
@@ -1450,8 +1484,8 @@ public class DomParser {
 					}
 					else if(key.equals("android:lines"))
 					{
-						System.out.println("    "+layout_name+".lineBreakMode = NSLineBreakMode.ByWordWrapping");
-						System.out.println("    "+layout_name+".numberOfLines = "+value);
+						buf_code.append("    "+layout_name+".lineBreakMode = NSLineBreakMode.ByWordWrapping\n");
+						buf_code.append("    "+layout_name+".numberOfLines = "+value+"\n");
 					}
 					else if(key.equals("android:minLines")){
 //						System.out.println("    "+layout_name+".setMinLines("+value+");");
@@ -1464,7 +1498,7 @@ public class DomParser {
 						if(value.startsWith("@string/")){
 							value = "R.string."+value.substring(8);
 						}
-						System.out.println("    "+layout_name+".placeholder = \""+value+"\"");
+						buf_code.append("    "+layout_name+".placeholder = \""+value+"\"\n");
 					}
 					else if(key.equals("android:drawable")){
 						if(value.startsWith("@drawable/")){
@@ -1473,7 +1507,7 @@ public class DomParser {
 						else if(value.startsWith("@mipmap/")){
 							value = "R.mipmap."+value.substring(8);
 						}
-						System.out.println("    "+layout_name+".setImage(UIImage(named:"+value+"),for: UIControl.State.normal)");
+						buf_code.append("    "+layout_name+".setImage(UIImage(named:"+value+"),for: UIControl.State.normal)\n");
 					}
 					else if(key.equals("name")){
 						
@@ -1495,14 +1529,14 @@ public class DomParser {
 //						} else
 //							System.out.println("    " + layout_name + ".setId(" + value + ");");
 					} else if (key.startsWith("android:")) {
-						System.out.println(""+layout_name+"."+key.substring(8)+" = "+value);
+						buf_code.append(""+layout_name+"."+key.substring(8)+" = "+value+"\n");
 					} 
 					else if(key.startsWith("app:")){
-						System.out.println(""+layout_name+"."+key.substring(4)+" = "+value);
+						buf_code.append(""+layout_name+"."+key.substring(4)+" = "+value+"\n");
 					}
 					else
-						System.out.println("    " + layout_name + "." + map.item(ii).getNodeName() + " = "
-								+ map.item(ii).getNodeValue() + ";");
+						buf_code.append("    " + layout_name + "." + map.item(ii).getNodeName() + " = "
+								+ map.item(ii).getNodeValue() + ";\n");
 				}
 
 				for (int n = 0; n < nodelist.getLength(); n++) {
@@ -1517,7 +1551,7 @@ public class DomParser {
 
 			if (node.getNodeType() == 1) {
 				Element element1 = (Element) node;
-				System.out.println("    " + name + ".addSubView(" + element1.getAttribute("name") + ");");
+				buf_code.append("    " + name + ".addSubView(" + element1.getAttribute("name") + ")\n");
 			}
 		}
 
