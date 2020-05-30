@@ -164,6 +164,26 @@ public class XmlToCodeWindow extends JFrame{
 				+"        />\n"
 				+"\n"
 				+"</LinearLayout>");
+		editArea.setText("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+				+"<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
+				+"    android:orientation=\"horizontal\" android:layout_width=\"match_parent\"\n"
+				+"    android:layout_height=\"match_parent\">\n"
+				+"    <View\n"
+				+"        android:layout_width=\"30dp\"\n"
+				+"        android:background=\"#f0a000\"\n"
+				+"        android:layout_gravity=\"center|top\"\n"
+				+"        android:layout_height=\"60dp\"/>\n"
+				+"    <View\n"
+				+"        android:background=\"#f0f0f0\"\n"
+				+"        android:layout_width=\"60dp\"\n"
+				+"        android:layout_gravity=\"center\"\n"
+				+"        android:layout_height=\"60dp\"/>\n"
+				+"    <View\n"
+				+"        android:background=\"#70af90\"\n"
+				+"        android:layout_width=\"60dp\"\n"
+				+"        android:layout_gravity=\"right|center\"\n"
+				+"        android:layout_height=\"60dp\"/>\n"
+				+"</LinearLayout>");
 		//setVisible(true);
 	}
 }

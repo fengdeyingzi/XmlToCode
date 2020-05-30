@@ -206,7 +206,7 @@ public class SwiftDomParser {
 			Element root = document.getDocumentElement();
 			if (root instanceof Node) {
 				System.out.println("========");
-				setNodesId(root);
+				setNodesId(null,root);
 //				printfNodes(root);
 				String layout_root = "layout_root";
 				String className = root.getNodeName();
@@ -239,7 +239,7 @@ public class SwiftDomParser {
 			Element root = document.getDocumentElement();
 			if (root instanceof Node) {
 				System.out.println("========");
-				setNodesId(root);
+				setNodesId(null,root); //初始化
 //				printfNodes(root);
 				String layout_root = "layout_root";
 				String className = root.getNodeName();
@@ -304,8 +304,8 @@ public class SwiftDomParser {
 	
 	
 
-	// 遍历node设置id
-	void setNodesId(Node node) {
+	// TODO: 遍历node设置id
+	void setNodesId(Element eleParent, Node node) {
 		NodeList nodelist = node.getChildNodes();
 		// System.out.println("node name=" + node.getNodeName() + " value=" +
 		// node.getNodeValue() + " type=" + node.getNodeType());
@@ -332,11 +332,258 @@ public class SwiftDomParser {
 				element.setAttribute("name", view_name);
 				((Element) node).setAttribute("layoutparams", "layoutParams_" + count);
 				count++;
+				
+				String layout_weight = element.getAttribute("android:layout_weight");
+				if(layout_weight.length()!=0){
+					
+					String orientation = eleParent.getAttribute("android:orientation");
+					Float X = 100f;
+					//获取父控件之下的所有子控件
+					NodeList views = eleParent.getChildNodes();
+					ArrayList<Float> list_weight = new ArrayList<Float>();
+					ArrayList<String> list_width = new ArrayList<String>();
+					ArrayList<String> list_height = new ArrayList<String>();
+					int type = 0; //根据控件的 layout_width 和 layout_height 判断权重的计算方式
+					if(orientation.length()!=0){
+						if(orientation.equals("horizontal")){
+							System.out.println("horizontal");
+//							element.setAttribute("width_percentage", );
+							int fill_index = -1; //第一次出现fill的控件index
+							int ele_index = 0;
+							System.out.println("======== "+views.getLength());
+							for(int ii=0;ii<views.getLength();ii++){
+								if(views.item(ii) instanceof Element){
+									
+								Element item = (Element) views.item(ii);
+								String layout_width = item.getAttribute("android:layout_width");
+								String layout_height = item.getAttribute("android:layout_height");
+								list_width.add(layout_width);
+								System.out.println("========= add 1");
+								list_height.add(layout_height);
+								String weight = item.getAttribute("android:layout_weight");
+								list_weight.add(XmlUtil.getFloat(weight));
+								if(weight.equals("match_parent") || weight.equals("fill_parent")){
+									fill_index = ii;
+								}
+								ele_index++;
+								}
+								else{
+									System.out.println("转换Element失败 "+views.getLength());
+									list_width.clear();
+									list_height.clear();
+									list_weight.clear();
+									for(int n=0;n<views.getLength();n++){
+										Node nodeitem = views.item(n);
+										if(nodeitem.getNodeType() != 1){
+											NodeList mapitem = nodeitem.getChildNodes();
+											for(int nn=0;nn<mapitem.getLength();nn++){
+												nodeitem = mapitem.item(nn);
+												if(nodeitem.getNodeType()==1){
+													Element item = (Element) nodeitem;
+													String layout_width = item.getAttribute("android:layout_width");
+													String layout_height = item.getAttribute("android:layout_height");
+													System.out.println("chile layout_width = "+layout_width);
+													list_width.add(layout_width);
+													System.out.println("======= add2 ");
+													list_height.add(layout_height);
+													String weight = item.getAttribute("android:layout_weight");
+													list_weight.add(XmlUtil.getFloat(weight));
+													if((layout_width.equals("match_parent") || layout_width.equals("fill_parent")) && fill_index<0){
+														fill_index = ele_index;
+													}
+												}
+												else{
+													System.out.println("item child "+nodeitem.getNodeName());
+												}
+											}
+										}
+										else{
+											
+											System.out.println("view child "+nodeitem.getNodeName());
+											
+											Element item = (Element) nodeitem;
+											String layout_width = item.getAttribute("android:layout_width");
+											String layout_height = item.getAttribute("android:layout_height");
+											System.out.println("chile layout_width = "+layout_width);
+											list_width.add(layout_width);
+											System.out.println("========= add3 "+views.getLength());
+											list_height.add(layout_height);
+											String weight = item.getAttribute("android:layout_weight");
+											list_weight.add(XmlUtil.getFloat(weight));
+											if((layout_width.equals("match_parent") || layout_width.equals("fill_parent")) && fill_index<0){
+												fill_index = ele_index;
+											}
+											ele_index++;
+										}
+										
+									}
+								}
+								
+							}
+							int zero_num=0;
+							int fill_num=0;
+							
+							Float weights = 0f;
+							for(Float we:list_weight){
+								weights += we;
+							}
+							System.out.println("list_width = "+list_width);
+							System.out.println("list_height = "+list_height);
+							System.out.println("fill_num = "+fill_num+" zero_num = "+zero_num);
+							for(String width:list_width){
+								if(width.equals("0dp") || width.equals("0px") || width.equals("0dip")){
+									zero_num++;
+								}
+								if(width.equals("match_parent") || width.equals("fill_parent")){
+									fill_num++;
+								}
+							}
+							if(zero_num == list_width.size()){
+								type = 0;
+//								第一个控件的宽度为 0+(1/(1+2+2))X=X/5
+//								第二个控件的宽度为 0+(2/(1+2+2))X=2X/5
+//								第三个控件的宽度为 0+(2/(1+2+2))*X=2X/5
+								ArrayList<Element> list_child = XmlUtil.getChildElement(eleParent);
+								for(int ii=0;ii<list_child.size();ii++){
+									
+									Element item = list_child.get(ii);
+									Float weight = list_weight.get(ii);
+									item.setAttribute("width_percentage", ""+X/weights*weight );
+									System.out.println(" width_percentage "+item.getNodeName()+" "+X/weights*weight);
+								}
+								
+							}
+							else if(fill_num == list_width.size()){
+								type = 1;
+//								第一个控件的宽度为 X+(1/(1+2+2))(-2X)=3X/5
+//								第二个控件的宽度为 X+(2/(1+2+2))(-2X)=X/5
+//								第三个控件的宽度为 X+(2/(1+2+2))*(-2X)=X/5
+								ArrayList<Element> list_child = XmlUtil.getChildElement(eleParent);
+								for(int ii=0;ii<list_child.size();ii++){
+									
+									Element item = list_child.get(ii);
+									Float weight = list_weight.get(ii);
+									item.setAttribute("width_percentage", ""+(X+weight/weights*(-2*X)));
+									System.out.println(" width_percentage "+item.getNodeName()+" "+(X+weight/weights*(-2*X)));
+								}
+							}
+							else if(fill_num > 0 && zero_num > 0){
+								type = 2;
+//								第一个控件的宽度为 X+(1/(1+2+2))0=X
+//								第二个控件的宽度为 0+(2/(1+2+2))0=0
+//								第三个控件的宽度为 0+(2/(1+2+2))*0=0
+								System.out.println(">>>>>>>>>>>　算法3 "+fill_index);
+								if(fill_index>=0){
+									ArrayList<Element> list_child = XmlUtil.getChildElement(eleParent);
+									for(int ii=0;ii<list_child.size();ii++){
+										
+										Element item = list_child.get(ii);
+										if(ii==fill_index){
+											item.setAttribute("width_percentage", ""+X);
+										}
+										else{
+											item.setAttribute("width_percentage", "0");
+										}
+										System.out.println(" width_percentage "+item.getNodeName()+" ");
+									}
+								}
+								else{
+									System.out.println(">>>>>>>>>> fill_index<0");
+								}
+							}
+							else{
+								
+							}
+							
+							
+						}
+						else if(orientation.equals("vertical")){
+//							element.setAttribute("height_percentage", value);
+							int fill_index = -1; //第一次出现fill的控件index
+							for(int ii=0;ii<views.getLength();ii++){
+								
+								Element item = (Element) views.item(ii);
+								String layout_width = item.getAttribute("android:layout_width");
+								String layout_height = item.getAttribute("android:layout_height");
+								list_width.add(layout_width);
+								list_height.add(layout_height);
+								String weight = item.getAttribute("android:layout_weight");
+								list_weight.add(XmlUtil.getFloat(weight));
+								if(weight.equals("match_parent") || weight.equals("fill_parent")){
+									fill_index = ii;
+								}
+								
+							}
+							int zero_num=0;
+							int fill_num=0;
+							
+							Float weights = 0f;
+							for(Float we:list_weight){
+								weights += we;
+							}
+							for(String height:list_height){
+								if(height.equals("0dp") || height.equals("0px") || height.equals("0dip")){
+									zero_num++;
+								}
+								if(height.equals("match_parent") || height.equals("fill_parent")){
+									fill_num++;
+								}
+							}
+							if(zero_num == list_height.size()){
+								type = 0;
+//								第一个控件的宽度为 0+(1/(1+2+2))X=X/5
+//								第二个控件的宽度为 0+(2/(1+2+2))X=2X/5
+//								第三个控件的宽度为 0+(2/(1+2+2))*X=2X/5
+								for(int ii=0;ii<views.getLength();ii++){
+									
+									Element item = (Element) views.item(ii);
+									Float weight = list_weight.get(ii);
+									item.setAttribute("height_percentage", ""+X/weights*weight );
+									
+								}
+								
+							}
+							else if(fill_num == list_height.size()){
+								type = 1;
+//								第一个控件的宽度为 X+(1/(1+2+2))(-2X)=3X/5
+//								第二个控件的宽度为 X+(2/(1+2+2))(-2X)=X/5
+//								第三个控件的宽度为 X+(2/(1+2+2))*(-2X)=X/5
+								for(int ii=0;ii<views.getLength();ii++){
+									
+									Element item = (Element) views.item(ii);
+									Float weight = list_weight.get(ii);
+									item.setAttribute("height_percentage", ""+X+weight/weights*(-2*X));
+								}
+							}
+							else if(fill_num > 0 && zero_num > 0){
+								type = 2;
+//								第一个控件的宽度为 X+(1/(1+2+2))0=X
+//								第二个控件的宽度为 0+(2/(1+2+2))0=0
+//								第三个控件的宽度为 0+(2/(1+2+2))*0=0
+								if(fill_index>=0){
+									for(int ii=0;ii<views.getLength();ii++){
+										
+										Element item = (Element) views.item(ii);
+										if(ii==fill_index){
+											item.setAttribute("height_percentage", ""+X);
+										}
+										else{
+											item.setAttribute("height_percentage", "0");
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 		for (int n = 0; n < nodelist.getLength(); n++) {
 			Node nodeitem = nodelist.item(n);
-			setNodesId(nodeitem);
+			if(node instanceof Element)
+			setNodesId((Element)node, nodeitem);
+			else
+				setNodesId(eleParent, nodeitem);
 		}
 	}
 
@@ -1020,7 +1267,7 @@ public class SwiftDomParser {
 				//优先处理margin top layout_width layout_height layout_weight
 				String layout_width = element.getAttribute("android:layout_width");
 				String layout_height = element.getAttribute("android:layout_height");
-				String layout_weight = element.getAttribute("android:layout_weight");
+//				String layout_weight = element.getAttribute("android:layout_weight");
 				String orientation = element.getAttribute("android:orientation");
 				if (layout_width.equals("match_parent") || layout_width.equals("fill_parent")) {
 					layout_width = ".fill";
@@ -1077,8 +1324,8 @@ public class SwiftDomParser {
 							+ "UITextField" + "(" +")\n");
 				}
 				else {
-					buf_code.append("    var " + layout_name + ":" + nodeName + " = "
-							+ nodeName + "(" +")\n");
+					buf_code.append("    var " + layout_name + ":" + getLayoutName(nodeName) + " = "
+							+ getLayoutName(nodeName) + "(" +")\n");
 				}
 				
 				buf_code.append("    " + layout_name + ".tg_width ~= "+layout_width+"\n");
@@ -1102,7 +1349,10 @@ public class SwiftDomParser {
 					margin_top = XmlUtil.getSize(margin_top);
 					margin_right = XmlUtil.getSize(margin_right);
 					margin_bottom = XmlUtil.getSize(margin_bottom);
-					buf_code.append("    "+layout_name+ ".margin = UIEdgeInsets(top:"+margin_top+", left:"+margin_left+", bottom:"+margin_bottom+", right:"+margin_right+");\n");
+					buf_code.append("    "+layout_name+".tg_top ~= "+margin_top+"\n");
+					buf_code.append("    "+layout_name+".tg_bottom ~= "+margin_bottom+"\n");
+					buf_code.append("    "+layout_name+".tg_left ~= "+margin_left+"\n");
+					buf_code.append("    "+layout_name+".tg_right ~= "+margin_right+"\n");
 				}
 				
 				String padding = element.getAttribute("android:padding");
@@ -1121,10 +1371,7 @@ public class SwiftDomParser {
 					padding_top = XmlUtil.getSize(padding_top);
 					padding_right = XmlUtil.getSize(padding_right);
 					padding_bottom = XmlUtil.getSize(padding_bottom);
-					buf_code.append("    "+layout_name+".tg_top ~= "+padding_top+"\n");
-					buf_code.append("    "+layout_name+".tg_bottom ~= "+padding_bottom+"\n");
-					buf_code.append("    "+layout_name+".tg_left ~= "+padding_left+"\n");
-					buf_code.append("    "+layout_name+".tg_right ~= "+padding_right+"\n");
+					buf_code.append("    "+layout_name+".tg_padding = UIEdgeInsetsMake("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+"\n");
 		
 				}
 				
@@ -1208,7 +1455,29 @@ public class SwiftDomParser {
 						buf_code.append("    "+layout_name+".lineBreakMode = "+elipsize+"\n");
 					}
 					else if (key.equals("android:layout_weight")) {
-
+						System.out.println("layout_weight = "+value);
+						Element eleParent = (Element) element.getParentNode();
+						String orien = eleParent.getAttribute("android:orientation");
+						if(orien.equals("horizontal")){
+							System.out.println("orien is horizontal");
+							String percentage = element.getAttribute("width_percentage");
+							if(percentage.length()!=0){
+								buf_code.append("    "+layout_name + ".tg_width ~= "+percentage+"%\n");
+							}
+							else{
+								System.out.println("width_percentage is null");
+							}
+						}
+						else if(orien.equals("vertical")){
+							System.out.println("orien is vertical");
+							String percentage = element.getAttribute("height_percentage");
+							if(percentage.length()!=0){
+								buf_code.append("    "+layout_name + "tg_height ~= "+percentage+"%\n");
+							}
+						}
+						else{
+							System.out.print("orientation 未找到"+value);
+						}
 					} 
 					//date|textUri|textShortMessage|textAutoCorrect|none|numberSigned|textVisiblePassword|textWebEditText|textMultiLine|textNoSuggestions|textCapSentences|
 					//textAutoComplete|textImeMultiLine|numberDecimal
@@ -1333,24 +1602,41 @@ public class SwiftDomParser {
 					else if(key.equals("android:layout_gravity")){
 						String gravity_hor = "";
 						String gravity_ver = "";
+						boolean isLeft = false;
+						boolean isTop = false;
+						boolean isRight = false;
+						boolean isBottom = false;
 						if(value.indexOf("left")>=0){
+							isLeft = true;
 							buf_code.append("    "+layout_name+".tg_left ~= 0\n");
 						}
 							
 						if(value.indexOf("right")>=0){
+							isRight = true;
 							buf_code.append("    "+layout_name+".tg_right ~= 0\n");
 						}
 						
 						if(value.indexOf("top")>=0){
+							isTop = true;
 							buf_code.append("    "+layout_name+".tg_top ~= 0\n");
 						}
 						if(value.indexOf("bottom")>=0){
+							isBottom = true;
 							buf_code.append("    "+layout_name+".tg_bottom ~= 0\n");
 						}
 						
 						if(value.indexOf("center")>=0){
-							buf_code.append("    "+layout_name+".tg_centerX ~= 0\n");
-							buf_code.append("    "+layout_name+".tg_centerY ~= 0\n");
+							if(isLeft || isRight){
+								buf_code.append("    "+layout_name+".tg_centerY ~= 0\n");
+							}
+							else if(isBottom || isTop){
+								buf_code.append("    "+layout_name+".tg_centerX ~= 0\n");
+							}
+							else {
+								buf_code.append("    "+layout_name+".tg_centerX ~= 0\n");
+								buf_code.append("    "+layout_name+".tg_centerY ~= 0\n");
+							}
+							
 						}
 						
 						

@@ -1223,7 +1223,7 @@ public class DomParser {
 						System.out.println("    "+layout_name+".lineBreakMode = "+elipsize+"");
 					}
 					else if (key.equals("android:layout_weight")) {
-
+						buf_code.append("    "+element.getAttribute("layoutparams")+".weight = "+value+";\n");
 					} 
 					//date|textUri|textShortMessage|textAutoCorrect|none|numberSigned|textVisiblePassword|textWebEditText|textMultiLine|textNoSuggestions|textCapSentences|
 					//textAutoComplete|textImeMultiLine|numberDecimal

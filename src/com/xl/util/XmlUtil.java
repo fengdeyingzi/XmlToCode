@@ -1,4 +1,10 @@
 package com.xl.util;
+import java.util.ArrayList;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import com.xl.game.math.Str;
 
 public class XmlUtil {
@@ -203,7 +209,7 @@ public class XmlUtil {
 		}
 		
 		//读取真或假
-		boolean getBoolean(String text)
+		public static boolean getBoolean(String text)
 		{
 			if(text.equals("true"))
 			{
@@ -212,6 +218,67 @@ public class XmlUtil {
 			return false;
 		}
 		
+		//读取浮点数
+		public static float getFloat(String text)
+		{
+			int i=0;
+			char c=0; 
+			float f=0;
+			int type=0;
+			for(i=0;i<text.length();i++)
+			{
+				c=text.charAt(i);
+				if(c>='0'&&c<='9')
+				{
+					if(type==0)
+						f=f*10+(c-'0');
+					else if(type==1)
+						f=(f*10+(c-'0'))/10;
+				}
+				else if(c=='.')
+				{
+					type=1;
+				}
+			}
+			return f;
+		}
+		
+		//获取element下面的子element
+		public static ArrayList<Element> getChildElement(Element eleParent){
+			ArrayList<Element> list_child = new ArrayList<>();
+			NodeList views = eleParent.getChildNodes();
+			for(int n=0;n<views.getLength();n++){
+				Node nodeitem = views.item(n);
+				if(nodeitem.getNodeType() != 1){
+					NodeList mapitem = nodeitem.getChildNodes();
+					for(int nn=0;nn<mapitem.getLength();nn++){
+						nodeitem = mapitem.item(nn);
+						if(nodeitem.getNodeType()==1){
+							Element item = (Element) nodeitem;
+							String layout_width = item.getAttribute("android:layout_width");
+							String layout_height = item.getAttribute("android:layout_height");
+							System.out.println("chile layout_width = "+layout_width);
+							list_child.add(item);
+						}
+						else{
+							System.out.println("item child "+nodeitem.getNodeName());
+						}
+					}
+				}
+				else{
+					System.out.println("view child "+nodeitem.getNodeName());
+					
+					Element item = (Element) nodeitem;
+					list_child.add(item);
+					String layout_width = item.getAttribute("android:layout_width");
+					String layout_height = item.getAttribute("android:layout_height");
+					System.out.println("chile layout_width = "+layout_width);
+					
+				}
+				
+			}
+			return list_child;
+		}
 		
 
 }
