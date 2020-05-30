@@ -1327,9 +1327,19 @@ public class SwiftDomParser {
 					buf_code.append("    var " + layout_name + ":" + getLayoutName(nodeName) + " = "
 							+ getLayoutName(nodeName) + "(" +")\n");
 				}
+				if(layout_width.indexOf("%")>0){
+					buf_code.append("    " + layout_name + ".tg_width ~= "+layout_width+"\n");
+				}
+				else{
+					buf_code.append("    " + layout_name + ".tg_width.equal("+layout_width+")\n");
+				}
+				if(layout_height.indexOf("%")>0){
+					buf_code.append("    " + layout_name + ".tg_height ~= "+layout_height+"\n");
+				}
+				else{
+					buf_code.append("    " + layout_name + ".tg_height.equal("+layout_height+")\n");
+				}
 				
-				buf_code.append("    " + layout_name + ".tg_width ~= "+layout_width+"\n");
-				buf_code.append("    " + layout_name + ".tg_height ~= "+layout_height+"\n");
 //				buf_code.append("    " + layout_name + ".weight = "+layout_weight+"\n");
 				
 				
@@ -1371,7 +1381,7 @@ public class SwiftDomParser {
 					padding_top = XmlUtil.getSize(padding_top);
 					padding_right = XmlUtil.getSize(padding_right);
 					padding_bottom = XmlUtil.getSize(padding_bottom);
-					buf_code.append("    "+layout_name+".tg_padding = UIEdgeInsetsMake("+padding_left+", "+padding_top+", "+padding_right+", "+padding_bottom+"\n");
+					buf_code.append("    "+layout_name+".tg_padding = UIEdgeInsets(top:CGFloat("+padding_top+"), left:CGFloat("+padding_left+"), bottom:CGFloat("+padding_bottom+"), right:CGFloat("+padding_right+"))\n");
 		
 				}
 				
@@ -1404,8 +1414,18 @@ public class SwiftDomParser {
 					} else if (key.equals("android:theme")) {
 						
 					} else if (key.equals("android:background")) {
-						if(value.startsWith("@color/")){
-							buf_code.append("    "+layout_name+".backgroundColor = UIColor."+value.substring(7)+"\n");
+						if(value.startsWith("#")){
+							value = XmlUtil.getColorHex(value);
+							buf_code.append("    "+layout_name+".layer.backgroundColor = ColorUtil.getCGColor("+value+")\n");
+						}
+						else if(value.startsWith("@color/")){
+							buf_code.append("    "+layout_name+".layer.backgroundColor = ColorUtil.getCGColor(\""+value.substring(7)+"\")\n");
+						}
+						else if(value.startsWith("@drawable/")){
+							buf_code.append("    "+layout_name+".layer.contents = UIImage(named: \""+value.substring(10)+"\")!.cgImage\n");
+						}
+						else if(value.startsWith("@mipmap/")){
+							buf_code.append("    "+layout_name+".layer.contents = UIImage(named: \""+value.substring(8)+"\")!.cgImage\n");
 						}
 					} else if (key.equals("android:orientation")) {
 						
@@ -1436,7 +1456,13 @@ public class SwiftDomParser {
 							buf_code.append("    " + layout_name + ".textColor = " + value + "\n");
 					}
 					else if(key.equals("android:textSize")){
-						buf_code.append("    "+layout_name+".font = UIFont.systemFont(ofSize: "+value+")\n");
+						if(value.indexOf("sp")>0){
+							buf_code.append("    "+layout_name+".font = UIFont.systemFont(ofSize: "+Str.atoi(value)+")\n");
+						}
+						else{
+							buf_code.append("    "+layout_name+".font = UIFont.systemFont(ofSize: "+ XmlUtil.getFontSize(value) +")\n");
+						}
+						
 					}
 					else if(key.equals("android:ellipsize")){
 						String elipsize = value;
