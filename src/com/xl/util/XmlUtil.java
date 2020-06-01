@@ -183,10 +183,33 @@ public class XmlUtil {
 			return "Str.atoi(\""+text+"\")";
 		}
 		
+		//读取字号
+	public static String getiOSFontSize(String text)
+	{
+		if (text.startsWith("@dimen/")) {
+			return "DisplayUtil.px2sp(context,DimenUtil.getDimen(\""
+					+ text.substring(Str.strrchr(text, '/') + 1) + "\"))";
+		} else if (text.endsWith("dp") || text.endsWith("dip")) {
+			return "DisplayUtil.dip2sp(context, Str.atoi(\"" + text + "\"))";
+		} else if (text.endsWith("sp")) {
+			return "Str.atoi(\"" + text + "\")";
+		} else if (text.endsWith("px")) {
+			return "DisplayUtil.px2sp(context, Str.atoi(\"" + text + "\"))";
+		}
+		return "Str.atoi(\"" + text + "\")";
+	}
+		
 		//读取string
 		public static String getString(String text){
 			if(text.startsWith("@string/")){
 				return "R.string."+text.substring(Str.strrchr(text, '/')+1);
+			}
+			return text;
+		}
+		
+		public static String getiOSString(String text) {
+			if(text.startsWith("@string/")){
+				return "StringUtil.getString(context,\""+text.substring(Str.strrchr(text, '/')+1)+"\")";
 			}
 			return text;
 		}
