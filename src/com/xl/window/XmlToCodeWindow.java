@@ -1,12 +1,20 @@
 package com.xl.window;
 
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.TextArea;
 import java.awt.Toolkit;
-
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -19,6 +27,7 @@ import javax.swing.JTextField;
 
 import com.xl.util.ClipBoard;
 import com.xl.util.DomParser;
+import com.xl.util.FileUtils;
 import com.xl.util.SwiftDomParser;
 
 
@@ -140,6 +149,21 @@ public class XmlToCodeWindow extends JFrame{
 		textWindow.setLocation((screen_w-640)/2, (screen_h-480)/2);
 		setTitle("xml布局转代码v1.0 - 风的影子 - https://github.com/fengdeyingzi/XmlToCode");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		dragFile(editArea,new OnDragFile() {
+			
+			@Override
+			public void onDragFile(List<File> list_file) {
+				File file = list_file.get(0);
+				try {
+					String text = FileUtils.read(file, "UTF-8");
+					editArea.setText(text);
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}
+				
+			}
+		});
 		editArea.setText("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
 				+"<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
 				+"    android:orientation=\"vertical\" android:layout_width=\"match_parent\"\n"
@@ -186,4 +210,52 @@ public class XmlToCodeWindow extends JFrame{
 //				+"</LinearLayout>");
 		//setVisible(true);
 	}
+	
+	
+	  public void dragFile(Component c, OnDragFile onDragFile)
+	     {
+	        new DropTarget(c,DnDConstants.ACTION_COPY_OR_MOVE,new DropTargetAdapter()
+	         {
+	            @Override
+	            public void drop(DropTargetDropEvent dtde)
+	            {
+	                try{
+	                    
+	                    if(dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor))
+	                     {
+	                        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+	                        List<File>list=(List<File>)(dtde.getTransferable().getTransferData(DataFlavor.javaFileListFlavor));
+	                        if(onDragFile!=null){
+	                        	onDragFile.onDragFile(list);
+	                        }
+//	                        String temp="";
+//	                        for(File file:list)
+//	                         {
+//	                            temp+=file.getAbsolutePath()+";\n";
+//	                            JOptionPane.showMessageDialog(null, temp);
+//	                            dtde.dropComplete(true);
+//	                            
+//	                         }
+	                        
+	                     }
+	                    
+	                    else
+	                     {
+	                        
+	                        dtde.rejectDrop();
+	                     }
+	                    
+	                }catch(Exception e){e.printStackTrace();}
+	                
+	            }
+	            
+	            
+	         });
+	        
+	        
+	     }
+	  
+	  public interface OnDragFile{
+		  public void onDragFile(List<File> list_file);
+	  }
 }
