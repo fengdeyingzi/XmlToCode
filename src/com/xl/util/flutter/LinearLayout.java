@@ -36,7 +36,10 @@ public class LinearLayout implements Widget{
 		}
 		if(name.equals("android:layout_width")){
 			if(value.equals("match_parent") || value.equals("fill_parent")){
-				layout_width = "double.infinity";
+				layout_width = "MATCH_PARENT";
+			}
+			else if(value.equals("wrap_content")){
+				layout_width = "WRAP_CONTENT";
 			}
 			else if(value.indexOf("dip")>0 || value.indexOf("dp")>0){
 				layout_width = ""+Str.atoi(value);
@@ -50,7 +53,10 @@ public class LinearLayout implements Widget{
 		}
 		else if(name.equals("android:layout_height")){
 			if(value.equals("match_parent") || value.equals("fill_parent")){
-				layout_height = "double.infinity";
+				layout_height = "MATCH_PARENT";
+			}
+			else if(value.equals("wrap_content")){
+				layout_height = "WRAP_CONTENT";
 			}
 			else if(value.indexOf("dip")>0 || value.indexOf("dp")>0){
 				layout_height = ""+Str.atoi(value);
@@ -127,7 +133,7 @@ public class LinearLayout implements Widget{
 		}
 		buffer.append("]\n");
 		buffer.append(")\n");
-		return super.toString();
+		return buffer.toString();
 	}
 
 	@Override

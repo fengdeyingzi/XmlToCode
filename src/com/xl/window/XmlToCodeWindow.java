@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 import com.xl.util.ClipBoard;
 import com.xl.util.DomParser;
 import com.xl.util.FileUtils;
+import com.xl.util.FlutterDomParser;
 import com.xl.util.SwiftDomParser;
 
 
@@ -138,8 +139,12 @@ public class XmlToCodeWindow extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Toast.makeText(XmlToCodeWindow.this, "暂未实现").display();
-				System.out.println("暂未实现");
+				FlutterDomParser parser = new FlutterDomParser();
+				parser.setXmlText(editArea.getText());
+				parser.parseFlutter();
+				TextWindow window = new TextWindow();
+				window.setText(parser.toString());
+				window.show();
 			}
 		});
 
