@@ -185,7 +185,7 @@ public class XmlToCodeWindow extends JFrame{
 				+"        android:padding=\"32dp\"\n"
 				+"        />\n"
 				+"    <TextView\n"
-				+"        android:background=\"@drawable/ic_launcher\"\n"
+//				+"        android:background=\"@drawable/ic_launcher\"\n"
 				+"        android:layout_width=\"wrap_content\"\n"
 				+"        android:layout_height=\"wrap_content\"\n"
 				+"        android:textSize=\"16sp\"\n"
