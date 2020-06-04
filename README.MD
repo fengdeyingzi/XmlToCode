@@ -23,3 +23,9 @@
 #### xml转flutter
 
 ![screen_xmltocode_flutter](screen/screen_xmltocode_flutter.png)
+
+
+
+#### 相关资料
+
+xmlflutter:https://github.com/fengdeyingzi/xmlflutter
