@@ -27,15 +27,21 @@ public class FlutterWidget implements Widget{
 	
 //	String orientation;
 	List<Widget> children;
+	int leve; //缩进
 	
 	public  FlutterWidget(String name) {
 		this.widgetName = name;
+		leve = 1;
 		children = new ArrayList<Widget>();
 		map_params = new HashMap<String,String>();
 	}
 	
 	public void setWidgetName(String name) {
 		this.widgetName = name;
+	}
+	
+	public void setLeve(int leve) {
+		this.leve = leve;
 	}
 	
 	@Override
@@ -321,6 +327,12 @@ public class FlutterWidget implements Widget{
 		children.add(widget);
 	}
 	
+	private void getSpace(StringBuffer buffer){
+		for(int i=0;i<leve;i++){
+			buffer.append("  ");
+		}
+	}
+	
 	@Override
 	public String toString() {
 		boolean isLayout = false;
@@ -337,13 +349,47 @@ public class FlutterWidget implements Widget{
 
 		}
 		StringBuffer buffer = new StringBuffer();
+		getSpace(buffer);
 		buffer.append(widgetName);
 		buffer.append("(\n");
 		if(layout_width!=null){
+			getSpace(buffer);
 			buffer.append("    layout_width:"+layout_width+",\n");
 		}
 		if(layout_height!=null){
+			getSpace(buffer);
 			buffer.append("    layout_height:"+layout_height+",\n");
+		}
+		if(paddingLeft!=null){
+			getSpace(buffer);
+			buffer.append("    paddingLeft:"+paddingLeft+",\n");
+		}
+		if(paddingTop!=null){
+			getSpace(buffer);
+			buffer.append("    paddingTop:"+paddingTop+",\n");
+		}
+		if(paddingRight!=null){
+			getSpace(buffer);
+			buffer.append("    paddingRight:"+paddingRight+",\n");
+		}
+		if(paddingBottom!=null){
+			getSpace(buffer);
+			buffer.append("    paddingBottom:"+paddingBottom+",\n");
+		}
+		if(marginLeft!=null){
+			getSpace(buffer);
+			buffer.append("    marginLeft:"+marginLeft+",\n");
+		}
+		if(marginTop!=null){
+			getSpace(buffer);
+			buffer.append("    marginTop:"+marginTop+",\n");
+		}
+		if(marginRight!=null){
+			buffer.append("    marginRight:"+marginRight+",\n");
+		}
+		if(marginBottom!=null){
+			getSpace(buffer);
+			buffer.append("    marginBottom:"+marginBottom+",\n");
 		}
 		  Iterator iter1 = map_params.entrySet().iterator();
           while (iter1.hasNext()) {
@@ -351,22 +397,31 @@ public class FlutterWidget implements Widget{
               String key = (String) entry.getKey();
               String value = (String) entry.getValue();
               if(value!=null){
+            	  getSpace(buffer);
                   buffer.append("    "+key+":"+value+",\n");
               }
           }
 		List<Widget> list_widget = getChildList();
 		if (list_widget.size() != 0) {
-			if (isLayout)
+			if (isLayout){
+				getSpace(buffer);
 				buffer.append("    children:[\n");
+			}
+				
 			else {
+				getSpace(buffer);
 				buffer.append("    child:");
 			}
 			for (int i = 0; i < list_widget.size(); i++) {
 				buffer.append(list_widget.get(i).toString());
 			}
-			if (isLayout)
+			if (isLayout){
+				getSpace(buffer);
 				buffer.append("    ],\n");
+			}
+				
 		}
+		getSpace(buffer);
 		buffer.append("),\n");
 		return buffer.toString();
 	}

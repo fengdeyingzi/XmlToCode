@@ -74,7 +74,7 @@ public class FlutterDomParser {
 				buf_code = new StringBuffer();
 				
 				flutter_widget = new FlutterWidget(className);
-				printFlutterCode(flutter_widget, root);
+				printFlutterCode(flutter_widget, root,1);
 				System.out.println(flutter_widget.toString());
 				buf_code.append(flutter_widget.toString());
 				return;
@@ -406,7 +406,7 @@ public class FlutterDomParser {
 
 	
 	// 输出 ios swift 代码
-		void printFlutterCode(FlutterWidget widget, Element element) {
+		void printFlutterCode(FlutterWidget widget, Element element, int leve) {
 //			NodeList nodelist = node.getChildNodes();
 			
 				// 输出代码
@@ -418,6 +418,7 @@ public class FlutterDomParser {
 				else{
 					widget.setWidgetName(name);
 				}
+				widget.setLeve(leve);
 				
 				
 				NamedNodeMap map = element.getAttributes();
@@ -432,7 +433,7 @@ public class FlutterDomParser {
 					Element nodeitem = nodelist.get(n);
 					FlutterWidget child = new FlutterWidget(element.getNodeName());
 					widget.addChild(child);
-					printFlutterCode(child, nodeitem);
+					printFlutterCode(child, nodeitem,leve+1);
 				}
 			
 
