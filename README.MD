@@ -16,10 +16,10 @@
 
 #### xml转iOS代码（swift）
 
-![screen_xmltocode_swift](screen\screen_xmltocode_swift.png)
+![screen_xmltocode_swift](screen/screen_xmltocode_swift.png)
 
 
 
 #### xml转flutter
 
-![screen_xmltocode_flutter](screen\screen_xmltocode_flutter.png)
+![screen_xmltocode_flutter](screen/screen_xmltocode_flutter.png)
