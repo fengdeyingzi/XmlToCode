@@ -146,7 +146,21 @@ public class FlutterWidget implements Widget{
 			map_params.put("gravity", gravity.substring(1));
 		}
 		else if(name.equals("android:layout_gravity")){
-			
+			String gravity = "";
+			if(value.indexOf("center")>=0){
+				gravity += "|Gravity.CENTER";
+			}
+			if(value.indexOf("top")>=0){
+				gravity += "|Gravity.TOP";
+			}
+			if(value.indexOf("right")>=0){
+				gravity += "|Gravity.RIGHT";
+			}
+			if(value.indexOf("bottom")>=0){
+				gravity += "|Gravity.BOTTOM";
+			}
+			if(gravity.length()>0)
+			map_params.put("layout_gravity", gravity.substring(1));
 		}
 		else if(name.equals("android:hint")){
 			map_params.put("hint", getString(value));
@@ -351,9 +365,9 @@ public class FlutterWidget implements Widget{
 				buffer.append(list_widget.get(i).toString());
 			}
 			if (isLayout)
-				buffer.append("    ]\n");
+				buffer.append("    ],\n");
 		}
-		buffer.append(")\n");
+		buffer.append("),\n");
 		return buffer.toString();
 	}
 

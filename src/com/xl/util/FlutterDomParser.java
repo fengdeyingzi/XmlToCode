@@ -412,7 +412,14 @@ public class FlutterDomParser {
 				// 输出代码
 //				Element element = (Element) node;
 				String name = element.getNodeName();
-				widget.setWidgetName(name);
+				if(name.indexOf(".")>=0){
+					widget.setWidgetName(name.substring(Str.strrchr(name, '.')+1));
+				}
+				else{
+					widget.setWidgetName(name);
+				}
+				
+				
 				NamedNodeMap map = element.getAttributes();
 				for (int ii = 0; ii < map.getLength(); ii++) {
 					String key = map.item(ii).getNodeName();
