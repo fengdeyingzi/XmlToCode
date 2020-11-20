@@ -2,6 +2,7 @@ package com.xl.window;
 
 
 import java.awt.Component;
+
 import java.awt.Dimension;
 import java.awt.TextArea;
 import java.awt.Toolkit;
@@ -32,7 +33,7 @@ import com.xl.util.FlutterDomParser;
 import com.xl.util.SwiftDomParser;
 
 
-public class XmlToCodeWindow extends JFrame{
+public class XmlToCodeWindow extends JFrame {
 
 	JTextArea editArea;
 	JTextField textField;
