@@ -6,23 +6,25 @@
 
 目前已初步实现xml布局转安卓java/swift/flutter代码
 
+### xml转findViewById代码
 
+![image-findviewbyid](screen/screen_xmltocode_findviewbyid.png)
 
 #### xml转java
 
-![xml转java](screen/screen_xmltocode_java.png)
+![image-java](screen/screen_xmltocode_java.png)
 
 
 
 #### xml转iOS代码（swift）
 
-![screen_xmltocode_swift](screen/screen_xmltocode_swift.png)
+![image-swift](screen/screen_xmltocode_swift.png)
 
 
 
 #### xml转flutter
 
-![screen_xmltocode_flutter](screen/screen_xmltocode_flutter.png)
+![image-flutter](screen/screen_xmltocode_flutter.png)
 
 
 
