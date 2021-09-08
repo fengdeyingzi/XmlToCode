@@ -28,6 +28,12 @@
 
 
 
+### jar下载
+
+https://github.com/fengdeyingzi/XmlToCode/releases/download/1.0/XmlToCode.jar
+
+
+
 #### 相关资料
 
 xmlflutter:https://github.com/fengdeyingzi/xmlflutter
