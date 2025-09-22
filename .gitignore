@@ -56,3 +56,5 @@ build/
 /mylibrary
 
 *.iml
+/web/node_modules
+/web/dist

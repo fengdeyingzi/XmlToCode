@@ -1,0 +1,26 @@
+{
+  "name": "xml-to-code-web",
+  "version": "1.0.0",
+  "description": "Web版本的Android XML布局转代码工具",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack serve --mode development",
+    "start": "webpack serve --mode development --open"
+  },
+  "keywords": ["xml", "android", "layout", "converter", "typescript"],
+  "author": "风的影子",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.5.3",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {}
+}

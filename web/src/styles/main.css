@@ -1,0 +1,598 @@
+/* 全局重置和基础样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: #2c3e50;
+  background: #4a90e2;
+  min-height: 100vh;
+}
+
+/* 容器 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  padding: 0px 16px;
+  flex-direction: column;
+}
+
+/* 头部样式 */
+.header {
+  text-align: start;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.header .title {
+  font-size: 24px;
+  font-weight: 500;
+  
+}
+
+.subtitle {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  opacity: 0.95;
+  font-weight: 400;
+}
+
+.github-link {
+  color: white;
+  font-weight: 500;
+}
+
+.github-link:hover {
+  color: #3365f0;
+}
+
+/* 主内容包装器 */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* 面板通用样式 */
+.panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding:  2px 20px;
+  border-bottom: 2px solid #f1f5f9;
+  background: #f0f0f0;
+}
+
+.panel-header h2 {
+  color: #333333;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.panel-body {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 输入面板 */
+.input-panel {
+  flex:1;
+}
+
+.file-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.xml-textarea {
+  width: 100%;
+  height: 280px;
+  padding: 20px;
+  border: none;
+  outline: none;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  flex:1;
+  background: #fafafa;
+  transition: background-color 0.2s ease;
+}
+
+.xml-textarea:focus {
+  background: #ffffff;
+}
+
+.xml-textarea.drag-over {
+  background: #f0f9ff;
+  border-color: #0ea5e9;
+}
+
+/* 控制面板 */
+.controls-panel {
+  padding:  4px 10px;
+  background: #f8fafc;
+  border-top: 2px solid #f1f5f9;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* 输出面板 */
+.output-panel {
+  min-height: 300px;
+}
+
+/* 隐藏的输出面板 */
+.output-panel.hidden {
+  display: none;
+}
+
+/* 全屏输出面板 */
+.output-panel.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background: white;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.output-panel.fullscreen .panel-body {
+  flex: 1;
+  height: calc(100vh - 80px);
+}
+
+.output-panel.fullscreen .code-output {
+  height: 100%;
+  border-radius: 0;
+}
+
+.output-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.code-output {
+  width: 100%;
+  height: 280px;
+  padding: 20px;
+  border: none;
+  outline: none;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow: auto;
+  white-space: pre;
+  background: #fff;
+  color: #333333;
+  margin: 0;
+}
+
+.code-output:empty::before {
+  content: "生成的代码将在这里显示...\A\A请先在上方输入XML代码，然后点击对应的转换按钮\A\A支持的转换类型：\A• findViewById - 生成查找控件代码\A• XML转Java - Android布局代码\A• XML转Swift - iOS布局代码  \A• XML转Flutter - Flutter Widget代码";
+  color: #94a3b8;
+  font-style: italic;
+  white-space: pre-line;
+}
+
+/* 按钮样式 */
+.btn {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.btn-outline {
+  background: white;
+  color: #64748b;
+  border: 1.5px solid #a2a8d0;
+}
+
+.btn-outline:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+/* 关闭按钮样式 */
+.btn-close {
+  background: none;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.btn-close:hover {
+  transform: scale(1.1);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-close svg {
+  width: 20px;
+  height: 20px;
+  fill: #ef4444;
+  transition: fill 0.2s ease;
+}
+
+.btn-close:hover svg {
+  fill: #dc2626;
+}
+
+.btn-action {
+  background: #3b82f6;
+  color: white;
+  border-radius: 4px;
+  flex-direction: column;
+  text-align: center;
+  min-height: 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-action:hover {
+  box-shadow: 0 8px 20px rgba(130, 130, 130, 0.4);
+}
+
+.btn-action:active {
+  transform: translateY(0);
+}
+
+
+
+
+
+
+
+
+.btn-text {
+  font-size: 1rem;
+  font-weight: 300;
+  margin-bottom: 2px;
+}
+
+.btn-action small {
+  font-size: 0.75rem;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+/* 底部 */
+.footer {
+  margin-top: 6px;
+}
+
+.footer-content {
+  text-align: center;
+  color: rgba(255,255,255,0.9);
+  font-size: 14px;
+}
+
+.footer-links {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-links a {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* 提示消息 */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #1f2937;
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  transform: translateX(400px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 350px;
+}
+
+.toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.toast.error {
+  background: #dc2626;
+}
+
+.toast.success {
+  background: #16a34a;
+}
+
+/* 模态框 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 2px solid #f1f5f9;
+  background: #f8fafc;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 1.4rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #64748b;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: calc(80vh - 100px);
+}
+
+.help-section {
+  margin-bottom: 24px;
+}
+
+.help-section h4 {
+  color: #1e293b;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+.help-section ol,
+.help-section ul {
+  margin-left: 20px;
+}
+
+.help-section li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+/* 加载动画 */
+.loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 高亮动画 */
+.highlight {
+  animation: highlight 0.6s ease-in-out;
+}
+
+@keyframes highlight {
+  0% { background-color: #fef3c7; }
+  100% { background-color: transparent; }
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .main-wrapper {
+    margin: 0 -10px;
+    border-radius: 8px;
+  }
+  
+  .button-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  
+  .header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .main-wrapper {
+    margin: 0;
+    border-radius: 8px;
+  }
+  
+  .button-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .panel-header {
+    padding: 16px 20px 12px;
+  }
+  
+  .controls-panel {
+    padding: 0px 20px;
+  }
+  
+  .xml-textarea,
+  .code-output {
+    height: 220px;
+    padding: 16px;
+  }
+  
+  .file-controls,
+  .output-controls {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  
+  .btn {
+    padding: 12px 16px;
+    justify-content: center;
+  }
+  
+  .toast {
+    right: 15px;
+    left: 15px;
+    transform: translateY(-100px);
+    max-width: none;
+  }
+  
+  .toast.show {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .xml-textarea,
+  .code-output {
+    height: 180px;
+    font-size: 13px;
+  }
+  
+  .btn-text {
+    font-size: 0.9rem;
+  }
+  
+  .btn-action small {
+    font-size: 0.7rem;
+  }
+}

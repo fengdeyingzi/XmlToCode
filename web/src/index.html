@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML转代码工具 - Web版</title>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <p class="title">XML转代码工具</p>
+            <p class="subtitle">将Android XML布局转换为Java、Swift、Flutter代码
+<a href="https://github.com/fengdeyingzi/XmlToCode" target="_blank" class="github-link">
+                https://github.com/fengdeyingzi/XmlToCode
+            </a>
+
+            </p>
+            
+        </header>
+
+        <!-- 主内容区 -->
+        <div class="main-wrapper">
+            <!-- 输入区域 -->
+            <div class="panel input-panel">
+                <div class="panel-header">
+                    <h2>输入XML</h2>
+                    <div class="file-controls">
+                        <input type="file" id="file-input" accept=".xml" style="display: none;">
+                        <button id="load-file-btn" class="btn btn-outline">加载文件</button>
+                        <button id="clear-btn" class="btn btn-outline">清空</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <textarea 
+                        id="xml-input" 
+                        class="xml-textarea" 
+                        placeholder="在此输入或拖拽XML文件...&#10;&#10;支持格式：&#10;• Android Layout XML&#10;• 拖拽上传XML文件&#10;• Ctrl+V 粘贴XML内容"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- 控制按钮 -->
+            <div class="controls-panel">
+                <div class="button-grid">
+                    <button id="findViewById-btn" class="btn btn-action findViewById">
+                        <span class="btn-text">findViewById</span>
+                    </button>
+                    <button id="java-btn" class="btn btn-action java">
+                        <span class="btn-text">XML转Java</span>
+                    </button>
+                    <button id="kotlin-btn" class="btn btn-action kotlin">
+                        <span class="btn-text">XML转Kotlin</span>
+                    </button>
+                    <button id="swift-btn" class="btn btn-action swift">
+                        <span class="btn-text">XML转Swift</span>
+                    </button>
+                    <button id="flutter-btn" class="btn btn-action flutter">
+                        <span class="btn-text">XML转Flutter</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 输出区域 -->
+            <div id="output-panel" class="panel output-panel hidden">
+                <div class="panel-header">
+                    <h2>生成结果</h2>
+                    <div class="output-controls">
+                        
+                        <button id="copy-btn" class="btn btn-outline">复制</button>
+                        <button id="download-btn" class="btn btn-outline">下载</button>
+                        <button id="close-output-btn" class="btn btn-close">
+                            <svg viewBox="0 0 24 24">
+      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59    
+   19 19 17.59 13.41 12z"/>
+    </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <pre id="code-output" class="code-output"></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部 -->
+        
+    </div>
+
+    <!-- 提示消息 -->
+    <div id="toast" class="toast">
+        <span class="toast-message"></span>
+    </div>
+
+    <!-- 帮助弹窗 -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>使用帮助</h3>
+                <button class="modal-close" onclick="hideHelp()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h4>快速开始</h4>
+                    <ol>
+                        <li>在输入框中粘贴或输入Android XML布局代码</li>
+                        <li>点击对应的转换按钮选择目标语言</li>
+                        <li>在下方查看生成的代码结果</li>
+                        <li>使用复制或下载功能保存代码</li>
+                    </ol>
+                </div>
+                <div class="help-section">
+                    <h4>功能说明</h4>
+                    <ul>
+                        <li><strong>findViewById</strong>: 生成查找控件的Java代码</li>
+                        <li><strong>XML转Java</strong>: 转换为Android Java布局代码</li>
+                        <li><strong>XML转Kotlin</strong>: 转换为Android Kotlin布局代码</li>
+                        <li><strong>XML转Swift</strong>: 转换为iOS Swift布局代码</li>
+                        <li><strong>XML转Flutter</strong>: 转换为Flutter Widget代码</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h4>使用技巧</h4>
+                    <ul>
+                        <li>支持拖拽XML文件到输入框</li>
+                        <li>支持键盘快捷键 Ctrl+V 粘贴</li>
+                        <li>生成的代码可直接复制使用</li>
+                        <li>支持下载为文本文件保存</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="bundle.js"></script>
+</body>
+</html>
